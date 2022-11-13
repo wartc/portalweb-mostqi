@@ -39,6 +39,9 @@ public class UserService
 
     public async Task<ServiceResponse> UpdateAsync(string id, User updatedUser)
     {
+        if (updatedUser.Id != id)
+            return new ServiceResponse(success: false, statusCode: (int)HttpStatusCode.BadRequest, message: "ID do usuário não confere");
+
         var user = await _userRepository.GetAsync(id);
 
         if (user == null)
@@ -47,9 +50,6 @@ public class UserService
         // adiciona o id do usuário caso nao tenha sido informado no body
         if (updatedUser.Id is null)
             updatedUser.Id = id;
-
-        if (updatedUser.Id != id)
-            return new ServiceResponse(success: false, statusCode: (int)HttpStatusCode.BadRequest, message: "Id do usuário não confere");
 
         await _userRepository.UpdateAsync(id, updatedUser);
 

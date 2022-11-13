@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Conventions;
 using PortalWeb.Data;
 using PortalWeb.Repositories;
 using PortalWeb.Services;
+using PortalWeb.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,5 +29,8 @@ ConventionRegistry.Register("CamelCase", camelCaseConventionPack, type => true);
 
 var app = builder.Build();
 
+// middleware para tratamento de erros
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.MapControllers();
+
 app.Run();

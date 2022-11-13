@@ -23,7 +23,7 @@ public class UsersController : ControllerBase
         return (List<User>)response.Data;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<User>> Get(string id)
     {
         var response = await _userService.GetUserAsync(id);
@@ -45,7 +45,7 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:length(24)}")]
     public async Task<IActionResult> Update(string id, User user)
     {
         var response = await _userService.UpdateAsync(id, user);
