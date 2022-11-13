@@ -1,3 +1,4 @@
+using System.Net;
 using PortalWeb.Models;
 using PortalWeb.Repositories;
 
@@ -9,31 +10,50 @@ public class UserService
 
     public UserService(UserRepository userRepository) => _userRepository = userRepository;
 
-    public async Task<List<User>> GetUsersAsync() => await _userRepository.GetAsync();
-
-    public async Task<User> GetUserAsync(string id)
+    public async Task<ServiceResponse<List<User>>> GetUsersAsync()
     {
-        var user = await _userRepository.GetAsync(id);
+        var users = await _userRepository.GetAsync();
 
-        if (user == null)
-            throw new Exception("User not found");
+        if (users == null)
+            return new ServiceResponse<List<User>>(false, message: "Erro ao buscar usuários");
 
-        return user;
+        return new ServiceResponse<List<User>>(true, users, (int)HttpStatusCode.OK);
     }
 
-    public async Task CreateAsync(User newUser) => await _userRepository.CreateAsync(newUser);
-
-    public async Task UpdateAsync(string id, User updatedUser)
+    public async Task<ServiceResponse<User>> GetUserAsync(string id)
     {
         var user = await _userRepository.GetAsync(id);
 
         if (user == null)
-            throw new Exception("User not found");
+            return new ServiceResponse<User>(false, (int)HttpStatusCode.NotFound, "Usuário não encontrado");
 
-        if (updatedUser.Id == null)
+        return new ServiceResponse<User>(true, user);
+    }
+
+    public async Task<ServiceResponse> CreateAsync(User newUser)
+    {
+        await _userRepository.CreateAsync(newUser);
+
+        return new ServiceResponse(success: true);
+    }
+
+    public async Task<ServiceResponse> UpdateAsync(string id, User updatedUser)
+    {
+        var user = await _userRepository.GetAsync(id);
+
+        if (user == null)
+            return new ServiceResponse(success: false, statusCode: (int)HttpStatusCode.NotFound, message: "Usuário não encontrado");
+
+        // adiciona o id do usuário caso nao tenha sido informado no body
+        if (updatedUser.Id is null)
             updatedUser.Id = id;
 
+        if (updatedUser.Id != id)
+            return new ServiceResponse(success: false, statusCode: (int)HttpStatusCode.BadRequest, message: "Id do usuário não confere");
+
         await _userRepository.UpdateAsync(id, updatedUser);
+
+        return new ServiceResponse(success: true);
     }
 
 }

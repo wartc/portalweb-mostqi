@@ -13,25 +13,47 @@ public class UsersController : ControllerBase
     public UsersController(UserService userService) => _userService = userService;
 
     [HttpGet]
-    public async Task<List<User>> Get() => await _userService.GetUsersAsync();
+    public async Task<ActionResult<List<User>>> Get()
+    {
+        var response = await _userService.GetUsersAsync();
+
+        if (!response.Success || response.Data == null)
+            return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao buscar usuários");
+
+        return (List<User>)response.Data;
+    }
 
     [HttpGet("{id}")]
-    public async Task<User> Get(string id) => await _userService.GetUserAsync(id);
+    public async Task<ActionResult<User>> Get(string id)
+    {
+        var response = await _userService.GetUserAsync(id);
+
+        if (!response.Success || response.Data == null)
+            return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao buscar usuário");
+
+        return (User)response.Data;
+    }
 
     [HttpPost]
-    public async Task<IActionResult> Post(User user)
+    public async Task<IActionResult> Create(User user)
     {
-        await _userService.CreateAsync(user);
+        var response = await _userService.CreateAsync(user);
+
+        if (!response.Success)
+            return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao criar usuário");
 
         return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(string id, User user)
+    public async Task<IActionResult> Update(string id, User user)
     {
-        await _userService.UpdateAsync(id, user);
+        var response = await _userService.UpdateAsync(id, user);
 
-        return NoContent();
+        if (!response.Success)
+            return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao atualizar usuário");
+
+        return Ok();
     }
 
 }

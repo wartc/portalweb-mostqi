@@ -1,7 +1,8 @@
+using MongoDB.Bson.Serialization.Conventions;
+
 using PortalWeb.Data;
 using PortalWeb.Repositories;
 using PortalWeb.Services;
-using MongoDB.Bson.Serialization.Conventions;
 
 var builder = WebApplication.CreateBuilder(args);
 
