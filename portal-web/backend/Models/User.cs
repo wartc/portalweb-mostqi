@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -11,6 +12,22 @@ public class User
 
     public string Name { get; set; } = null!;
 
-    public int Age { get; set; }
+    public string Email { get; set; } = null!;
 
+    public string Password { get; set; } = null!;
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public UserType Type { get; set; }
+
+    public UserClientDetails? ClientDetails { set; get; }
+
+}
+
+public enum UserType
+{
+    [BsonRepresentation(BsonType.String)]
+    CONTRIBUTOR,
+
+    [BsonRepresentation(BsonType.String)]
+    CLIENT
 }

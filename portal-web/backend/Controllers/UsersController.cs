@@ -15,4 +15,23 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<List<User>> Get() => await _userService.GetAsync();
 
+    [HttpGet("{id}")]
+    public async Task<User> Get(string id) => await _userService.GetAsync(id);
+
+    [HttpPost]
+    public async Task<IActionResult> Post(User user)
+    {
+        await _userService.CreateAsync(user);
+
+        return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(string id, User user)
+    {
+        await _userService.UpdateAsync(id, user);
+
+        return NoContent();
+    }
+
 }
