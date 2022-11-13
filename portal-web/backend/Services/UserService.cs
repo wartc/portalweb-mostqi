@@ -10,9 +10,9 @@ public class UserService
 
     public UserService(UserRepository userRepository) => _userRepository = userRepository;
 
-    public async Task<ServiceResponse<List<User>>> GetUsersAsync()
+    public async Task<ServiceResponse<List<User>>> GetUsersAsync(int page, int size)
     {
-        var users = await _userRepository.GetAsync();
+        var users = await _userRepository.GetAsync(page, size);
 
         if (users == null)
             return new ServiceResponse<List<User>>(false, message: "Erro ao buscar usuários");

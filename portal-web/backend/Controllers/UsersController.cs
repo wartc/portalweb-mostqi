@@ -13,9 +13,9 @@ public class UsersController : ControllerBase
     public UsersController(UserService userService) => _userService = userService;
 
     [HttpGet]
-    public async Task<ActionResult<List<User>>> Get()
+    public async Task<ActionResult<List<User>>> Get(int page, int size)
     {
-        var response = await _userService.GetUsersAsync();
+        var response = await _userService.GetUsersAsync(page, size);
 
         if (!response.Success || response.Data == null)
             return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao buscar usuários");
