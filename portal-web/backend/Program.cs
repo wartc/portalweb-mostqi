@@ -1,4 +1,5 @@
 using PortalWeb.Data;
+using PortalWeb.Repositories;
 using PortalWeb.Services;
 using MongoDB.Bson.Serialization.Conventions;
 
@@ -11,8 +12,11 @@ builder.Services.Configure<DBSettings>(builder.Configuration.GetSection("Databas
 // acessar collections diferentes a partir de uma mesma instancia do banco
 builder.Services.AddSingleton<DatabaseContext>();
 
-// adiciona services
-builder.Services.AddSingleton<UserService>();
+// adiciona cada repository com DI
+builder.Services.AddSingleton<UserRepository>();
+
+// adiciona cada service com DI 
+builder.Services.AddScoped<UserService>();
 
 // controllers
 builder.Services.AddControllers();

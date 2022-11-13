@@ -13,10 +13,10 @@ public class UsersController : ControllerBase
     public UsersController(UserService userService) => _userService = userService;
 
     [HttpGet]
-    public async Task<List<User>> Get() => await _userService.GetAsync();
+    public async Task<List<User>> Get() => await _userService.GetUsersAsync();
 
     [HttpGet("{id}")]
-    public async Task<User> Get(string id) => await _userService.GetAsync(id);
+    public async Task<User> Get(string id) => await _userService.GetUserAsync(id);
 
     [HttpPost]
     public async Task<IActionResult> Post(User user)

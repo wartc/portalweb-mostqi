@@ -1,24 +1,39 @@
-using MongoDB.Driver;
 using PortalWeb.Models;
-using PortalWeb.Data;
+using PortalWeb.Repositories;
 
 namespace PortalWeb.Services;
 
 public class UserService
 {
-    private readonly IMongoCollection<User> _userCollection;
+    private readonly UserRepository _userRepository;
 
-    public UserService(DatabaseContext dbContext)
+    public UserService(UserRepository userRepository) => _userRepository = userRepository;
+
+    public async Task<List<User>> GetUsersAsync() => await _userRepository.GetAsync();
+
+    public async Task<User> GetUserAsync(string id)
     {
-        _userCollection = dbContext.GetCollection<User>("user");
+        var user = await _userRepository.GetAsync(id);
+
+        if (user == null)
+            throw new Exception("User not found");
+
+        return user;
     }
 
-    public async Task<List<User>> GetAsync() => await _userCollection.Find(_ => true).ToListAsync();
+    public async Task CreateAsync(User newUser) => await _userRepository.CreateAsync(newUser);
 
-    public async Task<User> GetAsync(string id) => await _userCollection.Find(u => u.Id == id).FirstAsync();
+    public async Task UpdateAsync(string id, User updatedUser)
+    {
+        var user = await _userRepository.GetAsync(id);
 
-    public async Task CreateAsync(User newUser) => await _userCollection.InsertOneAsync(newUser);
+        if (user == null)
+            throw new Exception("User not found");
 
-    public async Task UpdateAsync(string id, User updatedUser) => await _userCollection.ReplaceOneAsync(u => u.Id == id, updatedUser);
+        if (updatedUser.Id == null)
+            updatedUser.Id = id;
+
+        await _userRepository.UpdateAsync(id, updatedUser);
+    }
 
 }
