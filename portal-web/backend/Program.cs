@@ -1,24 +1,23 @@
-using PortalWeb.Providers;
+using PortalWeb.Data;
 using PortalWeb.Services;
-using PortalWeb.Models;
 using MongoDB.Bson.Serialization.Conventions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// configure mongodb
+// configuracao do mongodb
 builder.Services.Configure<DBSettings>(builder.Configuration.GetSection("DatabaseSettings"));
 
-// add dependency injection of the mongodb database
-// to access any collection from the singleton instance
-builder.Services.AddSingleton<PortalWebCollectionProvider>();
+// dependency injection do context do banco de dados para poder
+// acessar collections diferentes a partir de uma mesma instancia do banco
+builder.Services.AddSingleton<DatabaseContext>();
 
-// services
+// adiciona services
 builder.Services.AddSingleton<UserService>();
 
-// use controllers
+// controllers
 builder.Services.AddControllers();
 
-// use camelCase convention to automatically link mongodb bson element name in models
+// convencao de camelCase para o mongo linkar automaticamente o nome das propriedades dos models
 var camelCaseConventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
 ConventionRegistry.Register("CamelCase", camelCaseConventionPack, type => true);
 

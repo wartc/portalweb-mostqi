@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 using PortalWeb.Models;
-using PortalWeb.Providers;
+using PortalWeb.Data;
 
 namespace PortalWeb.Services;
 
@@ -8,9 +8,9 @@ public class UserService
 {
     private readonly IMongoCollection<User> _userCollection;
 
-    public UserService(PortalWebCollectionProvider collectionProvider)
+    public UserService(DatabaseContext dbContext)
     {
-        _userCollection = collectionProvider.GetCollection<User>("user");
+        _userCollection = dbContext.GetCollection<User>("user");
     }
 
     public async Task<List<User>> GetAsync() => await _userCollection.Find(_ => true).ToListAsync();

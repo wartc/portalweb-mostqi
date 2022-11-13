@@ -1,4 +1,4 @@
-namespace PortalWeb.Models;
+namespace PortalWeb.Data;
 
 public class DBSettings
 {
