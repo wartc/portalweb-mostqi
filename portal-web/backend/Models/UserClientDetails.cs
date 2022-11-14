@@ -1,3 +1,5 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace PortalWeb.Models;
 
 public class UserClientDetails
