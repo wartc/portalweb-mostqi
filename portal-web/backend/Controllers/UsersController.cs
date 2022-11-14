@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PortalWeb.Contracts.User;
 using PortalWeb.Services;
@@ -13,6 +14,7 @@ public class UsersController : ControllerBase
     public UsersController(UserService userService) => _userService = userService;
 
     [HttpGet]
+    [Authorize(Roles = "CONTRIBUTOR")]
     public async Task<ActionResult<List<UserResponse>>> Get(int page, int size)
     {
         var response = await _userService.GetUsersAsync(page, size);
@@ -24,6 +26,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id:length(24)}")]
+    [Authorize]
     public async Task<ActionResult<UserResponse>> Get(string id)
     {
         var response = await _userService.GetUserAsync(id);
@@ -35,6 +38,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "CONTRIBUTOR")]
     public async Task<IActionResult> Create(CreateUserRequest request)
     {
         var response = await _userService.CreateAsync(request);
@@ -46,6 +50,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id:length(24)}")]
+    [Authorize]
     public async Task<IActionResult> Update(string id, UpdateUserRequest request)
     {
         var response = await _userService.UpdateAsync(id, request);

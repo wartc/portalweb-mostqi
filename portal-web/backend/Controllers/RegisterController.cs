@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PortalWeb.Contracts.Register;
 using PortalWeb.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace PortalWeb.Controllers;
 
@@ -13,6 +14,7 @@ public class RegisterController : ControllerBase
 
     [HttpPost]
     [Route("register")]
+    [AllowAnonymous]
     public async Task<ActionResult<RegisterResponse>> Register(RegisterRequest request)
     {
         var response = await _registerService.RegisterAsync(request);
