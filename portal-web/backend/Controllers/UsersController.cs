@@ -1,6 +1,5 @@
 using PortalWeb.Contracts.User;
 using PortalWeb.Services;
-using PortalWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PortalWeb.Controllers;
@@ -21,7 +20,7 @@ public class UsersController : ControllerBase
         if (!response.Success || response.Data == null)
             return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao buscar usuários");
 
-        return (List<UserResponse>)response.Data;
+        return response.Data;
     }
 
     [HttpGet("{id:length(24)}")]
@@ -32,7 +31,7 @@ public class UsersController : ControllerBase
         if (!response.Success || response.Data == null)
             return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao buscar usuário");
 
-        return (UserResponse)response.Data;
+        return response.Data;
     }
 
     [HttpPost]
