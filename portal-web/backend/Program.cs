@@ -20,6 +20,7 @@ builder.Services.AddSingleton<UserRepository>();
 // adiciona cada service com DI 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RegisterService>();
+builder.Services.AddScoped<AuthService>();
 
 // controllers
 builder.Services.AddControllers();

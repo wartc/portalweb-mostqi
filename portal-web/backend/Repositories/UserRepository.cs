@@ -24,6 +24,8 @@ public class UserRepository
 
     public async Task<User> GetAsync(string id) => await _userCollection.Find(u => u.Id == id).FirstOrDefaultAsync();
 
+    public async Task<User> FindByEmailAsync(string email) => await _userCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
+
     public async Task CreateAsync(User newUser) => await _userCollection.InsertOneAsync(newUser);
 
     public async Task UpdateAsync(string id, User updatedUser) => await _userCollection.ReplaceOneAsync(u => u.Id == id, updatedUser);
