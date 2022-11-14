@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PortalWeb.Contracts.Auth;
 using PortalWeb.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace PortalWeb.Controllers;
 
@@ -13,6 +14,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("login")]
+    [AllowAnonymous]
     public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
     {
         var response = await _authService.LoginAsync(request);

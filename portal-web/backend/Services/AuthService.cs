@@ -1,5 +1,11 @@
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 using PortalWeb.Contracts.Auth;
 using PortalWeb.Repositories;
+using PortalWeb.Models;
 using PortalWeb.Utils;
 
 namespace PortalWeb.Services;
@@ -7,8 +13,37 @@ namespace PortalWeb.Services;
 public class AuthService
 {
     private readonly UserRepository _userRepository;
+    private readonly IConfiguration _configuration;
 
-    public AuthService(UserRepository userRepository) => _userRepository = userRepository;
+    public AuthService(IConfiguration configuration, UserRepository userRepository)
+    {
+        _userRepository = userRepository;
+        _configuration = configuration;
+    }
+
+    private string GenerateJWT(User user)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id!.ToString()),
+            new Claim(ClaimTypes.Name, user.Name),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Type.ToString())
+        };
+
+        var token = new JwtSecurityToken(
+            _configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
+            claims,
+            expires: DateTime.Now.AddMinutes(30),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
 
     public async Task<ServiceResponse<LoginResponse>> LoginAsync(LoginRequest request)
     {
@@ -17,7 +52,7 @@ public class AuthService
         if (user == null || Hasher.Verify(request.Password, user.Password) == false)
             return new ServiceResponse<LoginResponse>(false, 401, "Email ou senha incorretos");
 
-        var token = "TODO: Generate token";
+        var token = GenerateJWT(user);
 
         var response = new LoginResponse
         {

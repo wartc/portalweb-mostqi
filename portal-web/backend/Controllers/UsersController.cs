@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using PortalWeb.Contracts.User;
 using PortalWeb.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace PortalWeb.Controllers;
 
