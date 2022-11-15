@@ -38,6 +38,8 @@ const StyledInput = styled.input`
 
 const StyledLabel = styled.label`
   font-size: 14px;
+
+  transition: color 0.15s ease-in-out;
 `;
 
 const Input = (props: InputProps) => {
