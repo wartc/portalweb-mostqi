@@ -1,14 +1,15 @@
-import Input from "../../ui/Input";
-import Title from "../../ui/Title";
-import Link from "../../ui/Link";
-import Button from "../../ui/Button";
-import Container from "./Container";
+import CenteredLayout from "../../ui/layouts/CenteredLayout";
+import Input from "../../ui/components/Input";
+import Title from "../../ui/components/Title";
+import Link from "../../ui/components/Link";
+import Button from "../../ui/components/Button";
+
 import FormContainer from "./FormContainer";
 import LoginIllustration from "./LoginIllustration";
 
 const Login = () => {
   return (
-    <Container>
+    <CenteredLayout>
       <FormContainer>
         <div
           style={{
@@ -36,13 +37,13 @@ const Login = () => {
           <Button>Entrar</Button>
 
           <p style={{ marginTop: 20, fontSize: "0.8rem" }}>
-            Não tem uma conta? <Link to="/">Registre-se aqui!</Link>
+            Não tem uma conta? <Link to="/register">Registre-se aqui!</Link>
           </p>
         </div>
 
         <LoginIllustration />
       </FormContainer>
-    </Container>
+    </CenteredLayout>
   );
 };
 
