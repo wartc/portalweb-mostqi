@@ -23,7 +23,8 @@
     ],
     "rules": {
         "react/react-in-jsx-scope": "off",
-        "import/no-unresolved": "error"
+        "import/no-unresolved": "error",
+        "import/no-named-as-default": 0
     },
     "settings": {
         "import/parsers": {

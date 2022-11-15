@@ -1,6 +1,14 @@
-function App() {
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import Login from './pages/Login';
+
+const App = () => {
   return (
-    <h1>Setup!</h1>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+      </Routes>
+    </Router>
   );
 }
 
