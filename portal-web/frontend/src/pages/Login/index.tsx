@@ -1,9 +1,10 @@
 import Input from "../../ui/Input";
 import Title from "../../ui/Title";
+import Link from "../../ui/Link";
+import Button from "../../ui/Button";
 import Container from "./Container";
 import FormContainer from "./FormContainer";
-
-import { ReactComponent as LoginIllustration } from "../../assets/images/InvestmentIllustration.svg";
+import LoginIllustration from "./LoginIllustration";
 
 const Login = () => {
   return (
@@ -25,10 +26,21 @@ const Login = () => {
             placeholder="seu@email.com"
             style={{ marginBottom: 20 }}
           />
-          <Input label="Senha" type="password" placeholder="••••••••••••" />
+          <Input
+            label="Senha"
+            type="password"
+            placeholder="••••••••••••"
+            style={{ marginBottom: 50 }}
+          />
+
+          <Button>Entrar</Button>
+
+          <p style={{ marginTop: 20, fontSize: "0.8rem" }}>
+            Não tem uma conta? <Link to="/">Registre-se aqui!</Link>
+          </p>
         </div>
 
-        <LoginIllustration style={{ maxHeight: "70%" }} />
+        <LoginIllustration />
       </FormContainer>
     </Container>
   );
