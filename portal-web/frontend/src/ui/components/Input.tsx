@@ -2,11 +2,14 @@ import styled from "styled-components";
 
 type InputProps = {
   label: string;
+  fluid?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-const Container = styled.div`
+const Container = styled.div<{ fluid?: boolean }>`
   display: flex;
   flex-direction: column;
+
+  width: ${({ fluid }) => (fluid ? "100%" : "unset")};
 
   &:focus-within label {
     color: #ff4438;
@@ -44,7 +47,7 @@ const StyledLabel = styled.label`
 
 const Input = (props: InputProps) => {
   return (
-    <Container>
+    <Container fluid={props.fluid}>
       <StyledLabel>{props.label}</StyledLabel>
       <StyledInput {...props} />
     </Container>

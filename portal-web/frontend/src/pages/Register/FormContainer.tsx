@@ -2,17 +2,16 @@ import styled from "styled-components";
 
 const FormContainer = styled.div`
   display: flex;
-  height: 100%;
-  width: 30%;
+  width: 35%;
   flex-direction: column;
-  justify-content: center;
-
-  h1:first-child {
-    margin-bottom: 30px;
-  }
+  align-items: center;
 
   & > *:not(:last-child) {
     margin-bottom: 20px;
+  }
+
+  & > button {
+    margin-top: 5px;
   }
 `;
 
