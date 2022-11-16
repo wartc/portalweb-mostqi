@@ -1,32 +1,29 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import register from "../../api/services/register";
 
 import CenteredLayout from "../../ui/layouts/CenteredLayout";
 import BoxContainer from "../../ui/components/BoxContainer";
 import Input from "../../ui/components/Input";
 import Link from "../../ui/components/Link";
+import Button from "../../ui/components/Button";
+import Title from "../../ui/components/Title";
 
 import RegisterIllustration from "./RegisterIllustration";
 import FormContainer from "./FormContainer";
-import Button from "../../ui/components/Button";
-import Title from "../../ui/components/Title";
+import RegistratedModal from "./RegistratedModal";
+import Loading from "../../ui/components/Loading";
 
 type FormValues = {
   name: string;
   email: string;
-  password: string;
-  confirmPassword: string;
 };
 
 const Register = () => {
-  const navigate = useNavigate();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormValues>({
     name: "",
     email: "",
-    password: "",
-    confirmPassword: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,14 +34,20 @@ const Register = () => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
+    setIsLoading(true);
 
-    const { name, email, password } = formData;
-
-    const response = await register({ name, email, password });
-
-    // @TODO: Handle response & login user
-
-    return navigate("/");
+    const { name, email } = formData;
+    register({ name, email })
+      .then(() => {
+        setIsModalOpen(true);
+      })
+      .catch((err) => {
+        alert("Erro na criação de conta");
+        console.error(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -64,6 +67,7 @@ const Register = () => {
             value={formData.name}
             onChange={handleChange}
           />
+
           <Input
             fluid
             label="Email"
@@ -71,24 +75,6 @@ const Register = () => {
             type="email"
             placeholder="seu@email.com"
             value={formData.email}
-            onChange={handleChange}
-          />
-          <Input
-            fluid
-            label="Senha"
-            name="password"
-            type="password"
-            placeholder="••••••••••••"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <Input
-            fluid
-            label="Confirmar senha"
-            name="confirmPassword"
-            type="password"
-            placeholder="••••••••••••"
-            value={formData.confirmPassword}
             onChange={handleChange}
           />
 
@@ -99,6 +85,10 @@ const Register = () => {
           <p style={{ fontSize: "0.8rem", alignSelf: "flex-start" }}>
             Já tem uma conta? <Link to="/">Faça login!</Link>
           </p>
+
+          <Loading visible={isLoading} />
+
+          <RegistratedModal email={formData.email} isOpen={isModalOpen} />
         </FormContainer>
       </BoxContainer>
     </CenteredLayout>

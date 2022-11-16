@@ -3,7 +3,6 @@ import api from "../axios";
 type RegisterRequest = {
   name: string;
   email: string;
-  password: string;
 };
 
 type RegisterResponse = {
