@@ -19,7 +19,7 @@ public class RegisterService
     private static string GenerateRandomPassword()
     {
         Random random = new();
-        const string charset = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*?";
+        const string charset = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&?";
         return new string(Enumerable.Repeat(charset, 12)
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
@@ -43,7 +43,7 @@ public class RegisterService
 
         _emailService.SendEmail(request.Email,
             "Cadastro no PortalWeb",
-            @$"<h1>Seu cadastro foi realizado com sucesso!</h1>
+            @$"<h2>Seu cadastro foi realizado com sucesso!</h2>
             <p>Sua senha é: {generatedPassword}</p>
             <p>Por favor, altere sua senha pelo sistema assim que possível.</p>"
         );
