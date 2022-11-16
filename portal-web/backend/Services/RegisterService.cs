@@ -41,12 +41,17 @@ public class RegisterService
 
         await _userRepository.CreateAsync(newUser);
 
-        _emailService.SendEmail(request.Email,
+        var emailReponse = _emailService.SendEmail(request.Email,
             "Cadastro no PortalWeb",
             @$"<h2>Seu cadastro foi realizado com sucesso!</h2>
             <p>Sua senha é: {generatedPassword}</p>
             <p>Por favor, altere sua senha pelo sistema assim que possível.</p>"
         );
+
+        if (!emailReponse.Success)
+        {
+            return new ServiceResponse<RegisterResponse>(false, emailReponse.StatusCode, emailReponse.Message);
+        }
 
         var response = new RegisterResponse
         {

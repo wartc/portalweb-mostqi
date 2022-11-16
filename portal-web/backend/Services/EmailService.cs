@@ -21,8 +21,19 @@ public class EmailService
         smtp.Connect("smtp.gmail.com", 587, false);
         smtp.Authenticate(_configuration["EmailSettings:Sender"], _configuration["EmailSettings:SenderPassword"]);
 
-        smtp.Send(message);
-        smtp.Disconnect(true);
+        try
+        {
+            smtp.Send(message);
+
+        }
+        catch
+        {
+            return new ServiceResponse(false);
+        }
+        finally
+        {
+            smtp.Disconnect(true);
+        }
 
         return new ServiceResponse(true);
     }
