@@ -10,6 +10,15 @@ using PortalWeb.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+    policy =>
+    {
+        policy.WithOrigins("http://localhost:5000", "http://localhost:3000").AllowAnyOrigin();
+    });
+});
+
 // configuracao do mongodb
 builder.Services.Configure<DBSettings>(builder.Configuration.GetSection("DatabaseSettings"));
 
@@ -53,6 +62,7 @@ var app = builder.Build();
 // middleware para tratamento de erros
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

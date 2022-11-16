@@ -20,7 +20,7 @@ public class RegisterService
             Name = request.Name,
             Email = request.Email,
             Password = hashedPassword,
-            Type = UserType.CLIENT,
+            Type = UserType.CONTRIBUTOR,
             ClientDetails = null
         };
 
