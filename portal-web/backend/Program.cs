@@ -33,6 +33,7 @@ builder.Services.AddSingleton<UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RegisterService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<EmailService>();
 
 // controllers
 builder.Services.AddControllers();

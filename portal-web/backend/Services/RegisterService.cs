@@ -8,12 +8,27 @@ namespace PortalWeb.Services;
 public class RegisterService
 {
     private readonly UserRepository _userRepository;
+    private readonly EmailService _emailService;
 
-    public RegisterService(UserRepository userRepository) => _userRepository = userRepository;
+    public RegisterService(UserRepository userRepository, EmailService emailService)
+    {
+        _userRepository = userRepository;
+        _emailService = emailService;
+    }
+
+    private static string GenerateRandomPassword()
+    {
+        Random random = new();
+        const string charset = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*?";
+        return new string(Enumerable.Repeat(charset, 12)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
 
     public async Task<ServiceResponse<RegisterResponse>> RegisterAsync(RegisterRequest request)
     {
-        var hashedPassword = Hasher.Hash(request.Password);
+        var generatedPassword = GenerateRandomPassword();
+
+        var hashedPassword = Hasher.Hash(generatedPassword);
 
         var newUser = new User
         {
@@ -25,6 +40,13 @@ public class RegisterService
         };
 
         await _userRepository.CreateAsync(newUser);
+
+        _emailService.SendEmail(request.Email,
+            "Cadastro no PortalWeb",
+            @$"<h1>Seu cadastro foi realizado com sucesso!</h1>
+            <p>Sua senha é: {generatedPassword}</p>
+            <p>Por favor, altere sua senha pelo sistema assim que possível.</p>"
+        );
 
         var response = new RegisterResponse
         {
