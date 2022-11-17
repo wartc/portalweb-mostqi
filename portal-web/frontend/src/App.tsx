@@ -8,7 +8,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Clients from "./pages/Clients";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./pages/ProtectedRoute";
+import AddClient from "./pages/AddClient";
 
 const App = () => {
   return (
@@ -20,34 +20,14 @@ const App = () => {
         </Route>
 
         <Route element={<ProtectedLayout />}>
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/profile" element={<Profile />} />
         </Route>
         <Route element={<ProtectedLayout requiredType="CONTRIBUTOR" />}>
-          <Route
-            path="/clients"
-            element={
-              <ProtectedRoute>
-                <Clients />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/clients" element={<Clients />} />
+          <Route path="/addClient" element={<AddClient />} />
         </Route>
         <Route element={<ProtectedLayout requiredType="CLIENT" />}>
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
 
         <Route path="*" element={<h1>404</h1>} />
