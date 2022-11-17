@@ -1,30 +1,30 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import CenteredLayout from "./ui/layouts/CenteredLayout";
+import DefaultLayout from "./ui/layouts/DefaultLayout";
 import ProtectedLayout from "./ui/layouts/ProtectedLayout";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import Clients from "./pages/Clients";
-import Currency from "./pages/Currency";
+import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./pages/ProtectedRoute";
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route element={<CenteredLayout />}>
+        <Route element={<DefaultLayout />}>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
 
         <Route element={<ProtectedLayout />}>
           <Route
-            path="/settings"
+            path="/profile"
             element={
               <ProtectedRoute>
-                <Settings />
+                <Profile />
               </ProtectedRoute>
             }
           />
@@ -41,10 +41,10 @@ const App = () => {
         </Route>
         <Route element={<ProtectedLayout requiredType="CLIENT" />}>
           <Route
-            path="/currency"
+            path="/dashboard"
             element={
               <ProtectedRoute>
-                <Currency />
+                <Dashboard />
               </ProtectedRoute>
             }
           />

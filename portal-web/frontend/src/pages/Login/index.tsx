@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuth } from "../../contexts/AuthContext";
 import Input from "../../ui/components/Input";
@@ -12,9 +12,13 @@ import FormContainer from "./FormContainer";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const auth = useAuth();
+  const { isLoading, user, signIn } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
+
+  useEffect(() => {
+    if (user) navigate(user.type === "CONTRIBUTOR" ? "/clients" : "/dashboard");
+  }, [isLoading]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,9 +27,10 @@ const Login = () => {
   const handleLogin = async () => {
     const { email, password } = formData;
 
-    const success = await auth.signIn(email, password);
+    const user = await signIn(email, password);
 
-    if (success) return navigate("/");
+    if (user)
+      return navigate(user.type === "CONTRIBUTOR" ? "/clients" : "/dashboard");
     alert("Erro no login"); // TODO: criar um componente de erro
   };
 

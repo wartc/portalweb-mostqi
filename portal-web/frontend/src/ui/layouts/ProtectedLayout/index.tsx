@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import ProtectedRoute from "../../pages/ProtectedRoute";
+import ProtectedRoute from "../../../pages/ProtectedRoute";
 
 type ProtectedLayoutProps = {
   requiredType?: "CONTRIBUTOR" | "CLIENT";

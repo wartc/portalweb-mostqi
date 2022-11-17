@@ -9,7 +9,7 @@ import login from "../api/services/auth";
 export type AuthContextType = {
   user: User | null;
   isLoading: boolean;
-  signIn: (email: string, password: string) => Promise<boolean>;
+  signIn: (email: string, password: string) => Promise<User | null>;
   signOut: () => void;
 };
 
@@ -54,7 +54,9 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const signIn = async (email: string, password: string) => {
     const data = await login(email, password);
 
-    if (!data) return false;
+    if (!data) return null;
+
+    api.defaults.headers["Authorization"] = `Bearer ${data.token}`;
 
     const user = {
       id: data.id,
@@ -67,7 +69,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     localStorage.setItem("user", JSON.stringify(user));
     setCookie("token", data.token);
 
-    return true;
+    return user;
   };
 
   const signOut = () => {
