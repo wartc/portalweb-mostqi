@@ -1,7 +1,6 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 
-import { AuthContext } from "../../contexts/AuthContext";
-import CenteredLayout from "../../ui/layouts/CenteredLayout";
+import { useAuth } from "../../contexts/AuthContext";
 import Input from "../../ui/components/Input";
 import Title from "../../ui/components/Title";
 import Link from "../../ui/components/Link";
@@ -13,7 +12,7 @@ import FormContainer from "./FormContainer";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const auth = useContext(AuthContext);
+  const auth = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
 
@@ -31,40 +30,38 @@ const Login = () => {
   };
 
   return (
-    <CenteredLayout>
-      <BoxContainer>
-        <FormContainer>
-          <Title style={{ alignSelf: "flex-start" }}>Faça seu login</Title>
+    <BoxContainer>
+      <FormContainer>
+        <Title style={{ alignSelf: "flex-start" }}>Faça seu login</Title>
 
-          <Input
-            name="email"
-            label="Email"
-            type="email"
-            placeholder="seu@email.com"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <Input
-            name="password"
-            label="Senha"
-            type="password"
-            placeholder="••••••••••••"
-            value={formData.password}
-            onChange={handleChange}
-          />
+        <Input
+          name="email"
+          label="Email"
+          type="email"
+          placeholder="seu@email.com"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <Input
+          name="password"
+          label="Senha"
+          type="password"
+          placeholder="••••••••••••"
+          value={formData.password}
+          onChange={handleChange}
+        />
 
-          <Button fluid onClick={handleLogin}>
-            Entrar
-          </Button>
+        <Button fluid onClick={handleLogin}>
+          Entrar
+        </Button>
 
-          <p style={{ fontSize: "0.8rem" }}>
-            Não tem uma conta? <Link to="/register">Registre-se aqui!</Link>
-          </p>
-        </FormContainer>
+        <p style={{ fontSize: "0.8rem" }}>
+          Não tem uma conta? <Link to="/register">Registre-se aqui!</Link>
+        </p>
+      </FormContainer>
 
-        <LoginIllustration />
-      </BoxContainer>
-    </CenteredLayout>
+      <LoginIllustration />
+    </BoxContainer>
   );
 };
 

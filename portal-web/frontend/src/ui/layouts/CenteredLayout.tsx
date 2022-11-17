@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -8,4 +9,12 @@ const Container = styled.div`
   align-items: center;
 `;
 
-export default Container;
+const Layout = () => {
+  return (
+    <Container>
+      <Outlet />
+    </Container>
+  );
+};
+
+export default Layout;
