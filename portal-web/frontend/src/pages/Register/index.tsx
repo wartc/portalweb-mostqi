@@ -37,17 +37,14 @@ const Register = () => {
     setIsLoading(true);
 
     const { name, email } = formData;
-    register({ name, email })
-      .then(() => {
+    register(name, email).then((data) => {
+      if (data) {
         setIsModalOpen(true);
-      })
-      .catch((err) => {
-        alert("Erro na criação de conta");
-        console.error(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      } else {
+        alert("Erro na criação de conta"); // TODO: criar um componente de erro
+      }
+      setIsLoading(false);
+    });
   };
 
   return (

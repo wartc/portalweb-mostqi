@@ -1,9 +1,12 @@
 import { User } from "../../types/User";
 import api from "../axios";
 
-const register = async (name: string, email: string): Promise<User | null> => {
+const login = async (
+  email: string,
+  password: string
+): Promise<(User & { token: string }) | null> => {
   return api
-    .post("/register", { name, email })
+    .post("/login", { email, password })
     .then((response) => response.data)
     .catch((error) => {
       console.error(error);
@@ -11,4 +14,4 @@ const register = async (name: string, email: string): Promise<User | null> => {
     });
 };
 
-export default register;
+export default login;
