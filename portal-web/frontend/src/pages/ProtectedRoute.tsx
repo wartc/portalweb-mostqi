@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -14,10 +14,9 @@ const LoadingContainer = styled.div`
 
 type ProtectedRouteProps = {
   requiredType?: "CLIENT" | "CONTRIBUTOR";
-  children: JSX.Element;
 };
 
-const ProtectedRoute = ({ requiredType, children }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ requiredType }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth();
 
   if (isLoading)
@@ -28,7 +27,7 @@ const ProtectedRoute = ({ requiredType, children }: ProtectedRouteProps) => {
     );
 
   return user && (!requiredType || user.type === requiredType) ? (
-    children
+    <Outlet />
   ) : (
     <Navigate to="/" />
   );

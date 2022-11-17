@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import DefaultLayout from "./ui/layouts/DefaultLayout";
-import ProtectedLayout from "./ui/layouts/ProtectedLayout";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -14,19 +13,17 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route element={<DefaultLayout />}>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-        <Route element={<ProtectedLayout />}>
+        <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
         </Route>
-        <Route element={<ProtectedLayout requiredType="CONTRIBUTOR" />}>
+        <Route element={<ProtectedRoute requiredType="CONTRIBUTOR" />}>
           <Route path="/clients" element={<Clients />} />
           <Route path="/addClient" element={<AddClient />} />
         </Route>
-        <Route element={<ProtectedLayout requiredType="CLIENT" />}>
+        <Route element={<ProtectedRoute requiredType="CLIENT" />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
 

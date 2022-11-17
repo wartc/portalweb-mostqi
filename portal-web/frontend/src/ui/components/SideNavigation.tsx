@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { FaUsers } from "react-icons/fa";
 
 type SideNavigationProps = {
   expanded?: boolean;
-  selected: "Clientes" | "Adicionar cliente";
+  children: React.ReactNode[];
 };
 
 const SideContainer = styled.aside<{ expanded?: boolean }>`
@@ -15,7 +14,7 @@ const SideContainer = styled.aside<{ expanded?: boolean }>`
   margin-right: 20px;
 `;
 
-const SideItem = styled.div<{ selected: boolean }>`
+export const SideItem = styled.div<{ selected: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -30,17 +29,6 @@ const SideItem = styled.div<{ selected: boolean }>`
   background-color: ${({ selected }) => (selected ? "#FF4A4A11" : "white")};
 `;
 
-const SideNavigation = ({ expanded, selected }: SideNavigationProps) => (
-  <SideContainer expanded={expanded}>
-    <SideItem selected={selected === "Clientes"}>
-      <FaUsers size="2em" />
-      {expanded ? "Clientes" : null}
-    </SideItem>
-    <SideItem selected={selected === "Adicionar cliente"}>
-      <FaUsers size="2em" />
-      {expanded ? "Adicionar cliente" : null}
-    </SideItem>
-  </SideContainer>
+export const SideNavigation = ({ expanded, children }: SideNavigationProps) => (
+  <SideContainer expanded={expanded}>{children}</SideContainer>
 );
-
-export default SideNavigation;

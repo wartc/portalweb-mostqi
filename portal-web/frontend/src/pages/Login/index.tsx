@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { useAuth } from "../../contexts/AuthContext";
+import DefaultLayout from "../../ui/layouts/DefaultLayout";
+
 import Input from "../../ui/components/Input";
 import Title from "../../ui/components/Title";
 import Link from "../../ui/components/Link";
@@ -35,38 +37,40 @@ const Login = () => {
   };
 
   return (
-    <BoxContainer>
-      <FormContainer>
-        <Title style={{ alignSelf: "flex-start" }}>Faça seu login</Title>
+    <DefaultLayout>
+      <BoxContainer>
+        <FormContainer>
+          <Title style={{ alignSelf: "flex-start" }}>Faça seu login</Title>
 
-        <Input
-          name="email"
-          label="Email"
-          type="email"
-          placeholder="seu@email.com"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <Input
-          name="password"
-          label="Senha"
-          type="password"
-          placeholder="••••••••••••"
-          value={formData.password}
-          onChange={handleChange}
-        />
+          <Input
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="seu@email.com"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <Input
+            name="password"
+            label="Senha"
+            type="password"
+            placeholder="••••••••••••"
+            value={formData.password}
+            onChange={handleChange}
+          />
 
-        <Button fluid onClick={handleLogin}>
-          Entrar
-        </Button>
+          <Button fluid onClick={handleLogin}>
+            Entrar
+          </Button>
 
-        <p style={{ fontSize: "0.8rem" }}>
-          Não tem uma conta? <Link to="/register">Registre-se aqui!</Link>
-        </p>
-      </FormContainer>
+          <p style={{ fontSize: "0.8rem" }}>
+            Não tem uma conta? <Link to="/register">Registre-se aqui!</Link>
+          </p>
+        </FormContainer>
 
-      <LoginIllustration />
-    </BoxContainer>
+        <LoginIllustration />
+      </BoxContainer>
+    </DefaultLayout>
   );
 };
 
