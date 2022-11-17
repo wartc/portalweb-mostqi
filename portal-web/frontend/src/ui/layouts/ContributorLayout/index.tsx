@@ -25,6 +25,8 @@ const ContributorLayout = ({ children }: { children: React.ReactNode }) => {
           {expanded ? "Adicionar cliente" : null}
         </SideItem>
       </SideNavigation>
+
+      {children}
     </LayoutContainer>
   );
 };
