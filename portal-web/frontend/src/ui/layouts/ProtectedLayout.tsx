@@ -1,30 +1,16 @@
-import styled from "styled-components";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import ProtectedRoute from "../../pages/ProtectedRoute";
 
-import { useAuth } from "../../contexts/AuthContext";
-import Loading from "../components/Loading";
+type ProtectedLayoutProps = {
+  requiredType?: "CONTRIBUTOR" | "CLIENT";
+};
 
-const LoadingContainer = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ProtectedLayout = () => {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading)
-    return (
-      <LoadingContainer>
-        <Loading visible={true} />
-      </LoadingContainer>
-    );
-
-  if (!user) return <Navigate to="/" />;
-
-  return <Outlet />;
+const ProtectedLayout = ({ requiredType }: ProtectedLayoutProps) => {
+  return (
+    <ProtectedRoute requiredType={requiredType}>
+      <Outlet />
+    </ProtectedRoute>
+  );
 };
 
 export default ProtectedLayout;
