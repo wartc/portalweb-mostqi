@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-direction: column;
+  
+    &:focus-within label {
+      color: #ff4438;
+    }
+
+    &.fluid {
+        width: 100%;
+    }
+}
+
+.input {
+    min-height: 2.5rem;
+    padding: 12px;
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  
+    &:focus {
+      border: 1px solid #ff4438;
+  
+      &::placeholder {
+        color: transparent;
+      }
+    }
+  
+    &::placeholder {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.4);
+    }
+  
+    transition: border 0.15s ease-in-out;
+}
+
+.inputLabel {
+    font-size: 14px;
+
+    transition: color 0.15s ease-in-out;
+}
