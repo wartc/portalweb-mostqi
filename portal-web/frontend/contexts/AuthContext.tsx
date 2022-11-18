@@ -15,7 +15,7 @@ export type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
 
   const [user, setUser] = useState<User | null>(null);
@@ -48,7 +48,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   const signIn = async (email: string, password: string) => {
     const data = await login(email, password);
-    console.log(data);
 
     if (!data) return null;
 
