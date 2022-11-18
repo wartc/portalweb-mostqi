@@ -2,7 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import { SideNavigation, SideItem } from "../../components/SideNavigation";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaUserPlus } from "react-icons/fa";
+import { CgPushChevronLeft, CgPushChevronRight } from "react-icons/cg";
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -18,11 +19,24 @@ const ContributorLayout = ({ children }: { children: React.ReactNode }) => {
       <SideNavigation expanded={expanded}>
         <SideItem selected={true}>
           <FaUsers size="2em" />
-          {expanded ? "Clientes" : null}
+          {expanded ? <span>Clientes</span> : null}
         </SideItem>
         <SideItem selected={false}>
-          <FaUsers size="2em" />
-          {expanded ? "Adicionar cliente" : null}
+          <FaUserPlus size="2em" />
+          {expanded ? <span>Novo cliente</span> : null}
+        </SideItem>
+        <SideItem>
+          {expanded ? (
+            <CgPushChevronLeft
+              size="1.75em"
+              onClick={() => setExpanded(false)}
+            />
+          ) : (
+            <CgPushChevronRight
+              size="1.75em"
+              onClick={() => setExpanded(true)}
+            />
+          )}
         </SideItem>
       </SideNavigation>
 

@@ -19,10 +19,12 @@ const App = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
         </Route>
+
         <Route element={<ProtectedRoute requiredType="CONTRIBUTOR" />}>
           <Route path="/clients" element={<Clients />} />
           <Route path="/addClient" element={<AddClient />} />
         </Route>
+
         <Route element={<ProtectedRoute requiredType="CLIENT" />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
