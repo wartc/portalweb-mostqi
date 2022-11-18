@@ -43,10 +43,14 @@
 }
 
 .illustration {
-    width: 30%;
-    height: 30%;
+    width: 35%;
 
     @media (max-width: 1024px) {
       display: none;
     }
+}
+
+.modalIllustration {
+    width: 30%;
+    height: 30%;
 }

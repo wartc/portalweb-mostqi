@@ -35,9 +35,7 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -97,28 +95,21 @@ const Register = () => {
 
           <Modal isOpen={isModalOpen}>
             <Image
-              className={styles.illustration}
+              className={`${styles.illustration} ${styles.modalIllustration}`}
               style={{ marginBottom: 20 }}
               src={RegisteredIllustration}
               alt="Imagem ilustrativa de registro completo"
             />
-            <h1 className={`${styles.title} ${styles.centered}`}>
-              Verifique seu email
-            </h1>
+            <h1 className={`${styles.title} ${styles.centered}`}>Verifique seu email</h1>
 
             <div className={styles.registeredTextContainer}>
               <p>
-                Quase lá! Um email foi enviado para <b>{formData.email}</b>{" "}
-                contendo sua senha.
+                Quase lá! Um email foi enviado para <b>{formData.email}</b> contendo sua senha.
               </p>
               <p>Verifique sua caixa de mensagens!</p>
             </div>
 
-            <Button
-              text="Ir para o login"
-              secondary
-              onClick={() => router.push("/login")}
-            />
+            <Button text="Ir para o login" secondary onClick={() => router.push("/login")} />
           </Modal>
         </div>
       </BoxContainer>
