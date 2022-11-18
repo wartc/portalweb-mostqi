@@ -4,6 +4,7 @@ import styled from "styled-components";
 type SideItemProps = {
   selected?: boolean;
   expanded?: boolean;
+  onClick?: () => void;
 };
 
 type SideNavigationProps = {
