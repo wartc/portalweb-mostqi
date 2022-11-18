@@ -10,7 +10,7 @@ export type WithAuthorizationProps = {
 
 export function withAuthorization<T extends WithAuthorizationProps = WithAuthorizationProps>(
   WrappedComponent: React.ComponentType<T>,
-  requiredType: UserTypes
+  requiredType?: UserTypes
 ) {
   const displayName = WrappedComponent.displayName || WrappedComponent.name || "Component";
 
@@ -37,7 +37,7 @@ export function withAuthorization<T extends WithAuthorizationProps = WithAuthori
       return null;
     }
 
-    if (user.type !== requiredType) {
+    if (requiredType && user.type !== requiredType) {
       Router.push(user.type === "CONTRIBUTOR" ? "/clients" : "/dashboard");
       return null;
     }
