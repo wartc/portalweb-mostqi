@@ -13,9 +13,7 @@ export type AuthContextType = {
   signOut: () => void;
 };
 
-export const AuthContext = createContext<AuthContextType>(
-  {} as AuthContextType
-);
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
@@ -37,10 +35,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         setUser({ id, name, email, type });
 
         if (!storedUser) {
-          localStorage.setItem(
-            "user",
-            JSON.stringify({ id, name, email, type })
-          );
+          localStorage.setItem("user", JSON.stringify({ id, name, email, type }));
         }
       }
     } else {
