@@ -26,7 +26,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id:length(24)}")]
-    [Authorize]
+    [Authorize(Roles = "CONTRIBUTOR")]
     public async Task<ActionResult<UserResponse>> Get(string id)
     {
         var response = await _userService.GetUserAsync(id);

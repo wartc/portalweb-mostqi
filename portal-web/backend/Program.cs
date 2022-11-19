@@ -28,9 +28,11 @@ builder.Services.AddSingleton<DatabaseContext>();
 
 // adiciona cada repository com DI
 builder.Services.AddSingleton<UserRepository>();
+builder.Services.AddSingleton<ClientRepository>();
 
 // adiciona cada service com DI 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<RegisterService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<EmailService>();
