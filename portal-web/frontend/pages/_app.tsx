@@ -5,6 +5,7 @@ import type { NextPage } from "next";
 import { AuthProvider } from "../contexts/AuthContext";
 import { Poppins } from "@next/font/google";
 import Modal from "react-modal";
+import { Toaster } from "react-hot-toast";
 import "../styles/globals.css";
 
 const poppins = Poppins({
@@ -33,6 +34,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           font-family: ${poppins.style.fontFamily};
         }
       `}</style>
+      <Toaster />
       <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
     </>
   );

@@ -9,7 +9,7 @@ import login from "../api/services/auth";
 export type AuthContextType = {
   user: User | null;
   isLoading: boolean;
-  signIn: (email: string, password: string) => Promise<User | null>;
+  signIn: (email: string, password: string) => Promise<User>;
   signOut: () => void;
 };
 
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signIn = async (email: string, password: string) => {
     const data = await login(email, password);
 
-    if (!data) return null;
+    if (!data) return Promise.reject();
 
     const user = {
       id: data.id,
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(user);
     setCookie("token", data.token);
 
-    return user;
+    return Promise.resolve(user);
   };
 
   const signOut = () => {

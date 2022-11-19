@@ -7,10 +7,11 @@ import register from "../../api/services/register";
 
 import styles from "./styles.module.scss";
 import DefaultLayout from "../../layouts/DefaultLayout";
+
+import { toast } from "react-hot-toast";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import BoxContainer from "../../components/BoxContainer";
-import Loading from "../../components/Loading";
 import Modal from "../../components/Modal";
 
 import RegisterIllustration from "../../public/images/RegisterIllustration.svg";
@@ -40,14 +41,16 @@ const Register: NextPageWithLayout = () => {
     setIsLoading(true);
 
     const { name, email } = formData;
-    register(name, email).then((data) => {
-      if (data) {
-        setIsModalOpen(true);
-      } else {
-        alert("Erro na criação de conta"); // TODO: criar um componente de erro
-      }
-      setIsLoading(false);
-    });
+    toast
+      .promise(register(name, email), {
+        loading: "Cadastrando...",
+        success: () => {
+          setIsModalOpen(true);
+          return "Cadastro realizado com sucesso!";
+        },
+        error: "Falha ao cadastrar",
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -81,7 +84,7 @@ const Register: NextPageWithLayout = () => {
           onChange={handleChange}
         />
 
-        <Button text="Registrar!" fluid onClick={handleSubmit} />
+        <Button disabled={isLoading} text="Registrar!" fluid onClick={handleSubmit} />
 
         <p className={styles.registerText}>
           Já tem uma conta?{" "}
@@ -89,8 +92,6 @@ const Register: NextPageWithLayout = () => {
             Faça login!
           </Link>
         </p>
-
-        <Loading visible={isLoading} />
 
         <Modal isOpen={isModalOpen}>
           <Image

@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useAuth } from "../../contexts/AuthContext";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import styles from "./styles.module.scss";
+
+import { toast } from "react-hot-toast";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import BoxContainer from "../../components/BoxContainer";
@@ -28,9 +30,11 @@ const Login: NextPageWithLayout = () => {
   const handleLogin = async () => {
     const { email, password } = formData;
 
-    const user = await signIn(email, password);
-
-    if (!user) alert("Erro no login"); // TODO: criar um componente de erro
+    toast.promise(signIn(email, password), {
+      loading: "Entrando...",
+      success: "Bem-vindo!",
+      error: "Falha ao entrar",
+    });
   };
 
   return (

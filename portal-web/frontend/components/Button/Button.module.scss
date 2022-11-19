@@ -8,20 +8,25 @@
     border: 1px solid tomato;
     border-radius: 4pt;
     background-color: tomato;
-  
-    &:hover {
-      color: white;
-      background-color: #f63e02;
-      border-color: #f63e02;
-    }
 
     &.secondary {
       color: tomato;
       background-color: white;
     }
   
+    &:hover {
+      color: white;
+      background-color: #f63e02;
+      border-color: #f63e02;
+    }
+  
     &.fluid {
       width: 100%;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
     }
 
     transition: all 0.15s ease-in-out;
