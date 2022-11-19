@@ -38,7 +38,7 @@ const Login: NextPageWithLayout = () => {
     toast.promise(loginMutation.mutateAsync(formData), {
       loading: "Entrando...",
       success: "Bem-vindo!",
-      error: "Falha ao entrar",
+      error: "Não foi possível entrar",
     });
   };
 

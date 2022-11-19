@@ -79,7 +79,7 @@ const Register: NextPageWithLayout = () => {
                 setIsModalOpen(true);
                 return "Cadastro realizado com sucesso!";
               },
-              error: "Falha ao cadastrar",
+              error: "Não foi possível cadastrar",
             })
           }
         />
