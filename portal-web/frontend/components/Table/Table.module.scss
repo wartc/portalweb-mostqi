@@ -1,0 +1,27 @@
+.table {
+  border-collapse: collapse;
+  border-spacing: 0 15px;
+  color: #3a3a3a;
+
+  thead {
+    font-size: 1.35em;
+    padding: 4px;
+    border-bottom: 1px solid #e0e0e0;
+
+    th {
+      padding-bottom: 10px;
+    }
+  }
+
+  tbody > tr {
+    cursor: pointer;
+  }
+
+  td {
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 1.15em;
+    font-weight: 400;
+    text-align: center;
+  }
+}

@@ -1,5 +1,10 @@
+import styles from "./Table.module.scss";
+
 type TableProps = {
-  columns: string[];
+  columns: {
+    dataIndex: string;
+    displayName: string;
+  }[];
   data: {
     [key: string]: any;
   }[];
@@ -7,17 +12,19 @@ type TableProps = {
 
 const Table = ({ columns, data }: TableProps) => {
   return (
-    <table>
+    <table className={styles.table}>
       <thead>
-        {columns.map((col, i) => (
-          <th key={i}>{col}</th>
-        ))}
+        <tr>
+          {columns.map(({ displayName }, i) => (
+            <th key={i}>{displayName}</th>
+          ))}
+        </tr>
       </thead>
       <tbody>
-        {data.map((row, i) => (
-          <tr key={i}>
-            {columns.map((col, j) => (
-              <td key={j}>{row[col]}</td>
+        {data.map((currentData, i) => (
+          <tr key={i} onClick={() => (currentData.onClick ? currentData.onClick() : null)}>
+            {columns.map(({ dataIndex }, j) => (
+              <td key={j}>{currentData[dataIndex]}</td>
             ))}
           </tr>
         ))}

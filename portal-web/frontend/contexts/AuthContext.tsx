@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signIn = async (email: string, password: string) => {
     return login(email, password)
       .then(({ id, name, email, type, token }) => {
-        console.log(id);
         const user = {
           id,
           name,

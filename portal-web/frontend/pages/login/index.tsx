@@ -48,6 +48,7 @@ const Login: NextPageWithLayout = () => {
         <h1 className={styles.title}>Faça seu login</h1>
 
         <Input
+          fluid
           name="email"
           label="Email"
           type="email"
@@ -56,6 +57,7 @@ const Login: NextPageWithLayout = () => {
           onChange={handleChange}
         />
         <Input
+          fluid
           name="password"
           label="Senha"
           type="password"
