@@ -102,7 +102,10 @@ public class UserService
             Name = String.IsNullOrWhiteSpace(request.Name) ? user.Name : request.Name,
             Email = String.IsNullOrWhiteSpace(request.Email) ? user.Email : request.Email,
             Type = request.Type is null ? user.Type : request.Type.Value,
-            ClientDetails = request.ClientDetails is null ? user.ClientDetails : request.ClientDetails
+            ClientDetails = request.ClientDetails is null ? user.ClientDetails : request.ClientDetails,
+            CreatedBy = user.CreatedBy,
+            CreatedAt = user.CreatedAt,
+            UpdatedAt = DateTime.UtcNow
         };
 
         // adiciona o id do usuario que está sendo atualizado
