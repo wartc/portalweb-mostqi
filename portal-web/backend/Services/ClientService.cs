@@ -24,4 +24,18 @@ public class ClientService
 
         return new ServiceResponse<List<UserResponse>>(true, clientsResponse, (int)HttpStatusCode.OK);
     }
+
+    public async Task<ServiceResponse<List<UserResponse>>> GetClientsByNameAsync(string name, int page, int size)
+    {
+        var clients = await _clientRepository.GetClientsByNameAsync(name, page, size);
+
+        if (clients == null)
+        {
+            return new ServiceResponse<List<UserResponse>>(false, message: "Não foi possível obter os clientes");
+        }
+
+        var clientsResponse = clients.Select(Mapper.MapUserResponse).ToList();
+
+        return new ServiceResponse<List<UserResponse>>(true, clientsResponse, (int)HttpStatusCode.OK);
+    }
 }
