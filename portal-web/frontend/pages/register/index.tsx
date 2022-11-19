@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import Image from "next/image";
 import Link from "next/link";
+import { useMutation } from "react-query";
 import { register } from "../../api/services/register";
 
 import styles from "./styles.module.scss";
@@ -24,9 +25,9 @@ type FormValues = {
 
 const Register: NextPageWithLayout = () => {
   const router = useRouter();
+  const registerMutation = useMutation((data: FormValues) => register(data.name, data.email));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormValues>({
     name: "",
     email: "",
@@ -34,23 +35,6 @@ const Register: NextPageWithLayout = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const { name, email } = formData;
-    toast
-      .promise(register(name, email), {
-        loading: "Cadastrando...",
-        success: () => {
-          setIsModalOpen(true);
-          return "Cadastro realizado com sucesso!";
-        },
-        error: "Falha ao cadastrar",
-      })
-      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -84,7 +68,21 @@ const Register: NextPageWithLayout = () => {
           onChange={handleChange}
         />
 
-        <Button disabled={isLoading} text="Registrar!" fluid onClick={handleSubmit} />
+        <Button
+          disabled={registerMutation.isLoading}
+          text="Registrar!"
+          fluid
+          onClick={() =>
+            toast.promise(registerMutation.mutateAsync(formData), {
+              loading: "Cadastrando...",
+              success: () => {
+                setIsModalOpen(true);
+                return "Cadastro realizado com sucesso!";
+              },
+              error: "Falha ao cadastrar",
+            })
+          }
+        />
 
         <p className={styles.registerText}>
           Já tem uma conta?{" "}

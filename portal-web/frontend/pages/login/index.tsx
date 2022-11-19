@@ -3,8 +3,9 @@ import { NextPageWithLayout } from "../_app";
 import Router from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-
+import { useMutation } from "react-query";
 import { useAuth } from "../../contexts/AuthContext";
+
 import DefaultLayout from "../../layouts/DefaultLayout";
 import styles from "./styles.module.scss";
 
@@ -15,9 +16,15 @@ import BoxContainer from "../../components/BoxContainer";
 
 import LoginIllustration from "../../public/images/InvestmentIllustration.svg";
 
+type FormValues = {
+  email: string;
+  password: string;
+};
+
 const Login: NextPageWithLayout = () => {
   const { user, signIn } = useAuth();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const loginMutation = useMutation((data: FormValues) => signIn(data.email, data.password));
+  const [formData, setFormData] = useState<FormValues>({ email: "", password: "" });
 
   useEffect(() => {
     if (user) Router.push(user.type === "CONTRIBUTOR" ? "/clients" : "/dashboard");
@@ -28,9 +35,7 @@ const Login: NextPageWithLayout = () => {
   };
 
   const handleLogin = async () => {
-    const { email, password } = formData;
-
-    toast.promise(signIn(email, password), {
+    toast.promise(loginMutation.mutateAsync(formData), {
       loading: "Entrando...",
       success: "Bem-vindo!",
       error: "Falha ao entrar",

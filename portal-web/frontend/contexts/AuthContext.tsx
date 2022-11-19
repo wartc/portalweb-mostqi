@@ -3,8 +3,8 @@ import { useCookies } from "react-cookie";
 import { decodeToken, isExpired } from "react-jwt";
 
 import { api } from "../api";
+import { login } from "../api/services/auth";
 import { User } from "../types/User";
-import login from "../api/services/auth";
 
 export type AuthContextType = {
   user: User | null;

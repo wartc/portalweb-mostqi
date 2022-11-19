@@ -4,9 +4,11 @@ import type { NextPage } from "next";
 
 import { AuthProvider } from "../contexts/AuthContext";
 import { Poppins } from "@next/font/google";
+import "../styles/globals.css";
+
+import { QueryClient, QueryClientProvider } from "react-query";
 import Modal from "react-modal";
 import { Toaster } from "react-hot-toast";
-import "../styles/globals.css";
 
 const poppins = Poppins({
   weight: ["400", "700"],
@@ -24,6 +26,14 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -35,7 +45,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         }
       `}</style>
       <Toaster />
-      <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+      </QueryClientProvider>
     </>
   );
 }
