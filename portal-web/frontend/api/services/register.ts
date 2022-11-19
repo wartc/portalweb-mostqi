@@ -7,7 +7,7 @@ const register = async (name: string, email: string): Promise<User | null> => {
     .then(({ data }) => Promise.resolve(data))
     .catch(({ response }) => {
       console.error(response);
-      return Promise.reject(response.response);
+      return Promise.reject();
     });
 };
 

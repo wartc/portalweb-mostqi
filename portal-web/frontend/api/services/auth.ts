@@ -1,16 +1,13 @@
 import { User } from "../../types/User";
 import api from "../axios";
 
-const login = async (
-  email: string,
-  password: string
-): Promise<(User & { token: string }) | null> => {
+const login = async (email: string, password: string): Promise<User & { token: string }> => {
   return api
     .post("/login", { email, password })
-    .then((response) => response.data)
-    .catch((error) => {
-      console.error(error);
-      return null;
+    .then(({ data }) => Promise.resolve(data))
+    .catch(({ response }) => {
+      console.error(response);
+      return Promise.reject();
     });
 };
 

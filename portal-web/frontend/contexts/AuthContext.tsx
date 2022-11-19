@@ -47,21 +47,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [cookie.token, user]);
 
   const signIn = async (email: string, password: string) => {
-    const data = await login(email, password);
+    return login(email, password)
+      .then(({ id, name, email, type, token }) => {
+        console.log(id);
+        const user = {
+          id,
+          name,
+          email,
+          type,
+        };
 
-    if (!data) return Promise.reject();
+        setUser(user);
+        setCookie("token", token);
 
-    const user = {
-      id: data.id,
-      name: data.name,
-      email: data.email,
-      type: data.type,
-    };
-
-    setUser(user);
-    setCookie("token", data.token);
-
-    return Promise.resolve(user);
+        return Promise.resolve(user);
+      })
+      .catch(() => {
+        return Promise.reject();
+      });
   };
 
   const signOut = () => {

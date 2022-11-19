@@ -1,12 +1,12 @@
 import { User } from "../../types/User";
 import api from "../axios";
 
-export const getUsers = async (): Promise<User[] | null> => {
+export const getUsers = async (): Promise<User[]> => {
   return api
     .get("/users")
-    .then((response) => response.data)
-    .catch((error) => {
-      console.error(error);
-      return null;
+    .then(({ data }) => Promise.resolve(data))
+    .catch(({ response }) => {
+      console.error(response);
+      return Promise.reject();
     });
 };
