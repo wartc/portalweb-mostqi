@@ -15,4 +15,10 @@ public record UserResponse
     public UserType Type { get; init; }
 
     public UserClientDetails? ClientDetails { get; init; }
+
+    public UserResponse? CreatedBy { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 }

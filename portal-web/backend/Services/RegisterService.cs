@@ -16,17 +16,9 @@ public class RegisterService
         _emailService = emailService;
     }
 
-    private static string GenerateRandomPassword()
-    {
-        Random random = new();
-        const string charset = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&?";
-        return new string(Enumerable.Repeat(charset, 12)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
-    }
-
     public async Task<ServiceResponse<RegisterResponse>> RegisterAsync(RegisterRequest request)
     {
-        var generatedPassword = GenerateRandomPassword();
+        var generatedPassword = AuthorizationUtils.GenerateRandomPassword();
 
         var hashedPassword = Hasher.Hash(generatedPassword);
 
@@ -36,21 +28,24 @@ public class RegisterService
             Email = request.Email,
             Password = hashedPassword,
             Type = UserType.CONTRIBUTOR,
-            ClientDetails = null
+            ClientDetails = null,
+            CreatedBy = null,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
         await _userRepository.CreateAsync(newUser);
 
-        var emailReponse = _emailService.SendEmail(request.Email,
+        var emailResponse = _emailService.SendEmail(request.Email,
             "Cadastro no PortalWeb",
             @$"<h2>Seu cadastro foi realizado com sucesso!</h2>
             <p>Sua senha é: {generatedPassword}</p>
             <p>Por favor, altere sua senha pelo sistema assim que possível.</p>"
         );
 
-        if (!emailReponse.Success)
+        if (!emailResponse.Success)
         {
-            return new ServiceResponse<RegisterResponse>(false, emailReponse.StatusCode, emailReponse.Message);
+            return new ServiceResponse<RegisterResponse>(false, emailResponse.StatusCode, emailResponse.Message);
         }
 
         var response = new RegisterResponse

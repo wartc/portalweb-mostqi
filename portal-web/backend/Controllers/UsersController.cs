@@ -41,7 +41,7 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "CONTRIBUTOR")]
     public async Task<IActionResult> Create(CreateUserRequest request)
     {
-        var response = await _userService.CreateAsync(request);
+        var response = await _userService.CreateAsync(request, User);
 
         if (!response.Success)
             return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao criar usuário");

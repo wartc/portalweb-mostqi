@@ -21,6 +21,12 @@ public class User
 
     public UserClientDetails? ClientDetails { set; get; }
 
+    public User? CreatedBy { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime UpdatedAt { get; set; }
+
 }
 
 public enum UserType

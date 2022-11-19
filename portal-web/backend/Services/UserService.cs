@@ -1,15 +1,22 @@
+using System.Security.Claims;
 using System.Net;
 using PortalWeb.Contracts.User;
 using PortalWeb.Models;
 using PortalWeb.Repositories;
+using PortalWeb.Utils;
 
 namespace PortalWeb.Services;
 
 public class UserService
 {
     private readonly UserRepository _userRepository;
+    private readonly EmailService _emailService;
 
-    public UserService(UserRepository userRepository) => _userRepository = userRepository;
+    public UserService(UserRepository userRepository, EmailService emailService)
+    {
+        _userRepository = userRepository;
+        _emailService = emailService;
+    }
 
     private UserResponse MapUserResponse(User user) => new()
     {
@@ -17,16 +24,21 @@ public class UserService
         Name = user.Name,
         Email = user.Email,
         Type = user.Type,
-        ClientDetails = user.ClientDetails
+        ClientDetails = user.ClientDetails,
+        CreatedBy = user.CreatedBy is null ? null : MapUserResponse(user.CreatedBy),
+        CreatedAt = user.CreatedAt,
+        UpdatedAt = user.UpdatedAt
     };
 
     private User MapUser(CreateUserRequest request) => new()
     {
         Name = request.Name,
         Email = request.Email,
-        Password = request.Password,
         Type = request.Type,
-        ClientDetails = request.ClientDetails
+        ClientDetails = request.ClientDetails,
+        CreatedBy = null,
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
     };
 
     public async Task<ServiceResponse<List<UserResponse>>> GetUsersAsync(int page, int size)
@@ -51,11 +63,29 @@ public class UserService
         return new ServiceResponse<UserResponse>(true, MapUserResponse(user));
     }
 
-    public async Task<ServiceResponse<UserResponse>> CreateAsync(CreateUserRequest request)
+    public async Task<ServiceResponse<UserResponse>> CreateAsync(CreateUserRequest request, ClaimsPrincipal requestingUser)
     {
         var user = MapUser(request);
+        var generatedPassword = AuthorizationUtils.GenerateRandomPassword();
+        var hashedPassword = Hasher.Hash(generatedPassword);
+
+        var creatorUser = await new AuthorizationUtils(_userRepository).GetRequestingUser(requestingUser);
+        user.CreatedBy = creatorUser;
+        user.Password = generatedPassword;
 
         await _userRepository.CreateAsync(user);
+
+        var emailResponse = _emailService.SendEmail(request.Email,
+            "Cadastro no PortalWeb",
+            @$"<h2>Seu cadastro foi realizado com sucesso pelo colaborador!</h2>
+            <p>Sua senha para entrar no sistema é: {generatedPassword}</p>
+            <p>Por favor, altere esta senha assim que possível.</p>"
+        );
+
+        if (!emailResponse.Success)
+        {
+            return new ServiceResponse<UserResponse>(false, emailResponse.StatusCode, emailResponse.Message);
+        }
 
         return new ServiceResponse<UserResponse>(success: true, MapUserResponse(user));
     }
