@@ -2,7 +2,7 @@ import { createContext, useState, useContext, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { decodeToken, isExpired } from "react-jwt";
 
-import api from "../api/axios";
+import { api } from "../api";
 import { User } from "../types/User";
 import login from "../api/services/auth";
 

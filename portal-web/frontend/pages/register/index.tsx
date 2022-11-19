@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import Image from "next/image";
 import Link from "next/link";
-import register from "../../api/services/register";
+import { register } from "../../api/services/register";
 
 import styles from "./styles.module.scss";
 import DefaultLayout from "../../layouts/DefaultLayout";

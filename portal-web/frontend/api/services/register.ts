@@ -1,14 +1,6 @@
 import { User } from "../../types/User";
-import api from "../axios";
+import { request } from "..";
 
-const register = async (name: string, email: string): Promise<User | null> => {
-  return api
-    .post("/register", { name, email })
-    .then(({ data }) => Promise.resolve(data))
-    .catch(({ response }) => {
-      console.error(response);
-      return Promise.reject();
-    });
+export const register = async (name: string, email: string): Promise<User | null> => {
+  return request("post", "/register", { name, email });
 };
-
-export default register;
