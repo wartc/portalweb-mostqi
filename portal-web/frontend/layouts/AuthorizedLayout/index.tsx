@@ -1,10 +1,12 @@
-import { FaAddressCard, FaUserPlus, FaUsers } from "react-icons/fa";
+import { FaAddressCard, FaChevronLeft, FaChevronRight, FaUserPlus, FaUsers } from "react-icons/fa";
 
 import styles from "./AuthorizedLayout.module.scss";
 import { useAuth } from "../../contexts/AuthContext";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
+  const [isMinimized, setIsMinimized] = useState(false);
   const { push, pathname } = useRouter();
   const { user } = useAuth();
 
@@ -20,8 +22,8 @@ const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
             }`}
             onClick={() => push("/clients")}
           >
-            <FaUsers size="2em" />
-            <span className={styles.itemLink}>Clientes</span>
+            <FaUsers size="1.5em" style={{ minWidth: "1.5em" }} />
+            {!isMinimized ? <span className={styles.itemLink}>Clientes</span> : null}
           </li>
           <li
             className={`${styles.sideNavigationListItem} ${
@@ -29,8 +31,8 @@ const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
             }`}
             onClick={() => push("/clients/new")}
           >
-            <FaUserPlus size="2em" />
-            <span className={styles.itemLink}>Novo cliente</span>
+            <FaUserPlus size="1.5em" style={{ minWidth: "1.5em" }} />
+            {!isMinimized ? <span className={styles.itemLink}>Novo cliente</span> : null}
           </li>
 
           <li
@@ -39,8 +41,16 @@ const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
             }`}
             onClick={() => push("/profile")}
           >
-            <FaAddressCard size="2em" />
-            <span className={styles.itemLink}>Perfil</span>
+            <FaAddressCard size="1.5em" style={{ minWidth: "1.5em" }} />
+            {!isMinimized ? <span className={styles.itemLink}>Perfil</span> : null}
+          </li>
+
+          <li className={styles.minimize} onClick={() => setIsMinimized(!isMinimized)}>
+            {isMinimized ? (
+              <FaChevronRight size="1.15em" style={{ minWidth: "1.5em" }} />
+            ) : (
+              <FaChevronLeft size="1.15em" style={{ minWidth: "1.5em" }} />
+            )}
           </li>
         </ul>
       </nav>
