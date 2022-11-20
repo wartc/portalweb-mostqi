@@ -11,7 +11,6 @@ import Loading from "../../components/Loading";
 import styles from "./styles.module.scss";
 import Table from "../../components/Table";
 import Input from "../../components/Input";
-import Button from "../../components/Button";
 
 const MAX_PAGE_SIZE = 10;
 
@@ -20,16 +19,12 @@ const Clients = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
-  const {
-    data: users,
-    isLoading,
-    isError,
-    isPreviousData,
-  } = useQuery({
+  const { data, isLoading, isError, isPreviousData } = useQuery({
     queryKey: ["users", { search, page }],
     queryFn: () =>
       !search ? getClients(page, MAX_PAGE_SIZE) : searchClientsByName(search, page, MAX_PAGE_SIZE),
     keepPreviousData: true,
+    staleTime: 5 * 60 * 1000,
   });
 
   if (isLoading) return <Loading visible={true} />;
@@ -51,7 +46,7 @@ const Clients = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
       <span className={styles.showingLabel}>
-        Exibindo {users!.length} {users!.length > 1 ? "clientes" : "cliente"}
+        Exibindo {data!.data.length} {data!.data.length > 1 ? "clientes" : "cliente"}
       </span>
       <Table
         columns={[
@@ -70,7 +65,7 @@ const Clients = () => {
             },
           },
         ]}
-        data={users!}
+        data={data?.data!}
         onRowClick={(user) => {
           router.push(`/clients/${user.id}`);
         }}

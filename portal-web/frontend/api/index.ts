@@ -4,6 +4,11 @@ export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
+export type PaginatedResponse<T> = {
+  data: T[];
+  hasNextPage: boolean;
+};
+
 export const request = async <TRequest, TResponse>(
   method: "get" | "post" | "put" | "delete",
   url: string,
@@ -11,10 +16,11 @@ export const request = async <TRequest, TResponse>(
   queryParams?: Record<string, string>,
   pagination?: {
     page: number;
-    pageSize: number;
+    size: number;
   }
 ) => {
   const onSuccess = (response: { data: TResponse }) => {
+    console.log(response);
     return Promise.resolve(response.data);
   };
 

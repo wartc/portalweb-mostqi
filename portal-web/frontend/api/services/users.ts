@@ -1,8 +1,8 @@
 import { User } from "../../types/User";
-import { request } from "..";
+import { request, PaginatedResponse } from "..";
 
-export const getUsers = async (page: number, pageSize: number): Promise<User[]> => {
-  return request("get", "/users", null, {}, { page, pageSize });
+export const getUsers = async (page: number, size: number): Promise<PaginatedResponse<User>> => {
+  return request("get", "/users", null, {}, { page, size });
 };
 
 export const getUser = async (id: string): Promise<User> => {

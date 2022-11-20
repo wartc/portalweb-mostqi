@@ -6,10 +6,12 @@ import { api } from "../api";
 import { login } from "../api/services/auth";
 import { User } from "../types/User";
 
+type UserBasicInformation = Omit<User, "clientDetails" | "createdBy" | "createdAt" | "updatedAt">;
+
 export type AuthContextType = {
-  user: User | null;
+  user: UserBasicInformation | null;
   isLoading: boolean;
-  signIn: (email: string, password: string) => Promise<User>;
+  signIn: (email: string, password: string) => Promise<UserBasicInformation>;
   signOut: () => void;
 };
 
@@ -18,7 +20,7 @@ export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserBasicInformation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
