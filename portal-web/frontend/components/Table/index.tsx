@@ -8,31 +8,37 @@ type TableProps<T> = {
     render?: (item: T) => React.ReactNode;
   }[];
   onRowClick?: (item: T) => void;
+  emptyMessage?: string;
 };
 
 export default function Table<T extends { [key: string]: any }>({
   data,
   columns,
   onRowClick,
+  emptyMessage = "Nenhum item encontrado",
 }: TableProps<T>) {
   return (
-    <table className={styles.table}>
-      <thead>
-        <tr>
-          {columns.map((col, i) => (
-            <th key={i}>{col.title}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((item, i) => (
-          <tr key={i} onClick={() => (onRowClick ? onRowClick(item) : null)}>
-            {columns.map((col, j) => (
-              <td key={j}>{col.render ? col.render(item) : item[col.key]}</td>
+    <>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            {columns.map((col, i) => (
+              <th key={i}>{col.title}</th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.map((item, i) => (
+            <tr key={i} onClick={() => (onRowClick ? onRowClick(item) : null)}>
+              {columns.map((col, j) => (
+                <td key={j}>{col.render ? col.render(item) : item[col.key]}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {data.length === 0 && <span className={styles.emptyMessage}>{emptyMessage}</span>}
+    </>
   );
 }

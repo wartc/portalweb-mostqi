@@ -11,9 +11,9 @@ import Loading from "../../components/Loading";
 import styles from "./styles.module.scss";
 import Table from "../../components/Table";
 import Input from "../../components/Input";
-import Button from "../../components/Button";
+import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 
-const MAX_PAGE_SIZE = 2;
+const MAX_PAGE_SIZE = 10;
 
 const Clients = () => {
   const router = useRouter();
@@ -36,6 +36,9 @@ const Clients = () => {
         <h1>Um erro inesperado ocorreu 😞</h1>
       </div>
     );
+
+  const hasPreviousPages = page > 1;
+  const hasMorePages = !isPreviousData && data?.hasNextPage;
 
   return (
     <div className={styles.container}>
@@ -70,22 +73,23 @@ const Clients = () => {
         onRowClick={(user) => {
           router.push(`/clients/${user.id}`);
         }}
+        emptyMessage="Sem clientes por aqui... 😞"
       />
       <span className={styles.statusLabels}>Página atual: {page}</span>
       <div className={styles.paginationNavigationContainer}>
-        <Button
+        <FaArrowCircleLeft
           onClick={() => setPage((old) => Math.max(old - 1, 1))}
-          disabled={page === 1}
-          text="Página anterior"
+          className={`${styles.paginationArrow} ${!hasPreviousPages ? styles.disabled : ""}`}
+          size="2rem"
         />
-        <Button
+        <FaArrowCircleRight
           onClick={() => {
-            if (!isPreviousData && data?.hasNextPage) {
+            if (hasMorePages) {
               setPage((old) => old + 1);
             }
           }}
-          disabled={isPreviousData || !data?.hasNextPage}
-          text="Próxima página"
+          className={`${styles.paginationArrow} ${!hasMorePages ? styles.disabled : ""}`}
+          size="2rem"
         />
       </div>
     </div>
