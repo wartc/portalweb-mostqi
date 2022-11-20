@@ -1,4 +1,6 @@
 using PortalWeb.Contracts.User;
+using PortalWeb.Contracts.Auth;
+using PortalWeb.Contracts.Register;
 using PortalWeb.Models;
 
 namespace PortalWeb.Utils;
@@ -32,5 +34,19 @@ public static class Mapper
         CreatedBy = null,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow
+    };
+
+    public static LoginResponse MapLoginResponse(User user, string token) => new()
+    {
+        User = MapUserResponse(user),
+        Token = token
+    };
+
+    public static RegisterResponse MapRegisterResponse(User user) => new()
+    {
+        Id = user.Id!,
+        Name = user.Name,
+        Email = user.Email,
+        Type = user.Type,
     };
 }

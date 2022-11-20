@@ -53,13 +53,7 @@ public class RegisterService
             return new ServiceResponse<RegisterResponse>(false, emailResponse.StatusCode, emailResponse.Message);
         }
 
-        var response = new RegisterResponse
-        {
-            Id = newUser.Id!,
-            Name = newUser.Name,
-            Email = newUser.Email,
-            Type = newUser.Type
-        };
+        var response = Mapper.MapRegisterResponse(newUser);
 
         return new ServiceResponse<RegisterResponse>(true, response);
     }

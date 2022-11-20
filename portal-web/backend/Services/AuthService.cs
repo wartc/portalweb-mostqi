@@ -55,14 +55,7 @@ public class AuthService
 
         var token = GenerateJWT(user);
 
-        var response = new LoginResponse
-        {
-            Id = user.Id!,
-            Name = user.Name,
-            Email = user.Email,
-            Type = user.Type,
-            Token = token
-        };
+        var response = Mapper.MapLoginResponse(user, token);
 
         return new ServiceResponse<LoginResponse>(true, response);
     }
