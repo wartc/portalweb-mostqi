@@ -26,7 +26,8 @@ public class ClientRepository
     public async Task<List<User>> GetClientsByNameAsync(string name, int page, int size)
     {
         var pageSize = size <= MAX_PAGE_SIZE ? size : MAX_PAGE_SIZE;
-        var filter = Builders<User>.Filter.Regex("name", new BsonRegularExpression(name, "i"));
+        var filter = Builders<User>.Filter.Regex("name", new BsonRegularExpression(name, "i"))
+            & Builders<User>.Filter.Eq("type", UserType.CLIENT);
 
         return await _userCollection.Find(filter).Skip(pageSize * (page - 1)).Limit(pageSize).ToListAsync();
     }
