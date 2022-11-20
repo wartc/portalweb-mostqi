@@ -1,19 +1,36 @@
 import { NextPageWithLayout } from "../_app";
 import { withAuthorization } from "../../helpers/withAuthorization";
 import AuthorizedLayout from "../../layouts/AuthorizedLayout";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 import { useQuery } from "react-query";
-import { getUsers } from "../../api/services/users";
+import { getClients, searchClientsByName } from "../../api/services/clients";
 import Loading from "../../components/Loading";
 
 import styles from "./styles.module.scss";
 import Table from "../../components/Table";
 import Input from "../../components/Input";
-import { useRouter } from "next/router";
+import Button from "../../components/Button";
+
+const MAX_PAGE_SIZE = 10;
 
 const Clients = () => {
   const router = useRouter();
-  const { data: users, isLoading, isError } = useQuery("users", getUsers);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const {
+    data: users,
+    isLoading,
+    isError,
+    isPreviousData,
+  } = useQuery({
+    queryKey: ["users", { search, page }],
+    queryFn: () =>
+      !search ? getClients(page, MAX_PAGE_SIZE) : searchClientsByName(search, page, MAX_PAGE_SIZE),
+    keepPreviousData: true,
+  });
 
   if (isLoading) return <Loading visible={true} />;
 
@@ -27,9 +44,12 @@ const Clients = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.pageTitle}>Clientes</h1>
-
-      <Input label="Buscar cliente" />
-
+      <Input
+        label="Buscar cliente"
+        fluid
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
       <span className={styles.showingLabel}>
         Exibindo {users!.length} {users!.length > 1 ? "clientes" : "cliente"}
       </span>

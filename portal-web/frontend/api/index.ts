@@ -7,10 +7,15 @@ export const api = axios.create({
 export const request = async <TRequest, TResponse>(
   method: "get" | "post" | "put" | "delete",
   url: string,
-  data?: TRequest
+  data?: TRequest,
+  queryParams?: Record<string, string>,
+  pagination?: {
+    page: number;
+    pageSize: number;
+  }
 ) => {
   const onSuccess = (response: { data: TResponse }) => {
-    return response.data;
+    return Promise.resolve(response.data);
   };
 
   const onError = (error: { response: string }) => {
@@ -18,5 +23,15 @@ export const request = async <TRequest, TResponse>(
     return Promise.reject();
   };
 
-  return api({ method, url, data }).then(onSuccess).catch(onError);
+  return api({
+    method,
+    url,
+    data,
+    params: {
+      ...(queryParams ?? {}),
+      ...(pagination ?? {}),
+    },
+  })
+    .then(onSuccess)
+    .catch(onError);
 };
