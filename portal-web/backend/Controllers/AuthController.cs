@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
         return Ok(serviceResponse.Data);
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("refresh")]
     [Authorize]
     public async Task<ActionResult<RefreshResponse>> Refresh()

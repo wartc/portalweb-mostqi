@@ -29,7 +29,8 @@ public class AuthService
         {
             Expires = DateTime.UtcNow.AddDays(REFRESH_TOKEN_EXPIRATION_TIME),
             HttpOnly = true,
-            Secure = true
+            Secure = true,
+            Path = "/",
         });
 
     }

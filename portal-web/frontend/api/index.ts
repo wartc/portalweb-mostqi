@@ -2,6 +2,10 @@ import axios from "axios";
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
 });
 
 export type PaginatedResponse<T> = {
@@ -20,7 +24,6 @@ export const request = async <TRequest, TResponse>(
   }
 ) => {
   const onSuccess = (response: { data: TResponse }) => {
-    console.log(response);
     return Promise.resolve(response.data);
   };
 

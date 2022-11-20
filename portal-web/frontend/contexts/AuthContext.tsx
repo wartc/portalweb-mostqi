@@ -3,42 +3,44 @@ import { useCookies } from "react-cookie";
 import { decodeToken, isExpired } from "react-jwt";
 
 import { api } from "../api";
-import { login } from "../api/services/auth";
+import { login, refresh } from "../api/services/auth";
 import { User } from "../types/User";
 
-type UserBasicInformation = Omit<User, "clientDetails" | "createdBy" | "createdAt" | "updatedAt">;
-
 export type AuthContextType = {
-  user: UserBasicInformation | null;
+  user: User | null;
   isLoading: boolean;
-  signIn: (email: string, password: string) => Promise<UserBasicInformation>;
+  signIn: (email: string, password: string) => Promise<User>;
   signOut: () => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cookie, setCookie, removeCookie] = useCookies(["token"]);
+  const [cookie, setCookie, removeCookie] = useCookies(["accessToken"]);
 
-  const [user, setUser] = useState<UserBasicInformation | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (cookie.token && !isExpired(cookie.token)) {
-      api.defaults.headers["Authorization"] = `Bearer ${cookie.token}`;
+    async function getRefreshToken() {
+      if (!cookie.accessToken) return;
 
-      const storedUser = localStorage.getItem("user");
+      const res = await refresh();
+      setCookie("accessToken", res.token);
+    }
+
+    const interval = setInterval(getRefreshToken, 25 * 60 * 1000); // 25 minutos
+    return () => clearInterval(interval);
+  }, [cookie, setCookie]);
+
+  useEffect(() => {
+    if (cookie.accessToken && !isExpired(cookie.accessToken)) {
+      api.defaults.headers["Authorization"] = `Bearer ${cookie.accessToken}`;
 
       if (!user) {
-        const { id, name, email, type } = storedUser
-          ? JSON.parse(storedUser)
-          : (decodeToken(cookie.token) as User);
-
-        setUser({ id, name, email, type });
-
-        if (!storedUser) {
-          localStorage.setItem("user", JSON.stringify({ id, name, email, type }));
-        }
+        const storedUser = localStorage.getItem("user");
+        const userToSet = JSON.parse(storedUser!);
+        setUser(userToSet);
       }
     } else {
       setUser(null);
@@ -46,20 +48,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     setIsLoading(false);
-  }, [cookie.token, user]);
+  }, [cookie.accessToken, user]);
 
   const signIn = async (email: string, password: string) => {
     return login(email, password)
-      .then(({ id, name, email, type, token }) => {
-        const user = {
-          id,
-          name,
-          email,
-          type,
-        };
-
+      .then(({ user, token }) => {
         setUser(user);
-        setCookie("token", token);
+        setCookie("accessToken", token);
+        localStorage.setItem("user", JSON.stringify(user));
 
         return Promise.resolve(user);
       })
@@ -69,7 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signOut = () => {
-    removeCookie("token");
+    removeCookie("accessToken");
   };
 
   return (
