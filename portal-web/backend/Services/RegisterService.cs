@@ -18,6 +18,13 @@ public class RegisterService
 
     public async Task<ServiceResponse<RegisterResponse>> RegisterAsync(RegisterRequest request)
     {
+        var existingEmail = await _userRepository.FindByEmailAsync(request.Email);
+
+        if (existingEmail != null)
+        {
+            return new ServiceResponse<RegisterResponse>(false, 400, "Email já cadastrado");
+        }
+
         var generatedPassword = Hasher.GenerateRandomPassword();
 
         var hashedPassword = Hasher.Hash(generatedPassword);
