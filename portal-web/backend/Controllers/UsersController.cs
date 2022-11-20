@@ -26,10 +26,10 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id:length(24)}")]
-    [Authorize(Roles = "CONTRIBUTOR")]
+    [Authorize]
     public async Task<ActionResult<UserResponse>> Get(string id)
     {
-        var response = await _userService.GetUserAsync(id);
+        var response = await _userService.GetUserAsync(id, User);
 
         if (!response.Success || response.Data == null)
             return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao buscar usuário");
@@ -53,7 +53,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Update(string id, UpdateUserRequest request)
     {
-        var response = await _userService.UpdateAsync(id, request);
+        var response = await _userService.UpdateAsync(id, request, User);
 
         if (!response.Success)
             return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao atualizar usuário");

@@ -46,4 +46,11 @@ public static class Hasher
         );
         return key.SequenceEqual(inputSecretKey);
     }
+
+    public static string GenerateRandomPassword()
+    {
+        Random random = new(); const string charset = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$&?";
+        return new string(Enumerable.Repeat(charset, 12)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
 }

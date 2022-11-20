@@ -18,7 +18,7 @@ public class RegisterService
 
     public async Task<ServiceResponse<RegisterResponse>> RegisterAsync(RegisterRequest request)
     {
-        var generatedPassword = new Guid().ToString().Substring(0, 10);
+        var generatedPassword = Hasher.GenerateRandomPassword();
 
         var hashedPassword = Hasher.Hash(generatedPassword);
 

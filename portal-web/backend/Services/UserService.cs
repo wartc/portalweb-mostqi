@@ -31,8 +31,11 @@ public class UserService
         return new ServiceResponse<List<UserResponse>>(true, usersResponse, (int)HttpStatusCode.OK);
     }
 
-    public async Task<ServiceResponse<UserResponse>> GetUserAsync(string id)
+    public async Task<ServiceResponse<UserResponse>> GetUserAsync(string id, ClaimsPrincipal requestingUser)
     {
+        if (!AuthorizationUtils.UserHasPermission(id, requestingUser))
+            return new ServiceResponse<UserResponse>(false, 403, message: "Você não tem permissão para acessar esse usuário");
+
         var user = await _userRepository.GetAsync(id);
 
         if (user == null)
@@ -44,7 +47,7 @@ public class UserService
     public async Task<ServiceResponse<UserResponse>> CreateAsync(CreateUserRequest request, ClaimsPrincipal requestingUser)
     {
         var user = Mapper.MapUser(request);
-        var generatedPassword = new Guid().ToString().Substring(0, 10);
+        var generatedPassword = Hasher.GenerateRandomPassword();
         var hashedPassword = Hasher.Hash(generatedPassword);
 
         var creatorUser = await new AuthorizationUtils(_userRepository).GetRequestingUser(requestingUser);
@@ -68,8 +71,11 @@ public class UserService
         return new ServiceResponse<UserResponse>(success: true, Mapper.MapUserResponse(user));
     }
 
-    public async Task<ServiceResponse> UpdateAsync(string id, UpdateUserRequest request)
+    public async Task<ServiceResponse> UpdateAsync(string id, UpdateUserRequest request, ClaimsPrincipal requestingUser)
     {
+        if (!AuthorizationUtils.UserHasPermission(id, requestingUser))
+            return new ServiceResponse(false, 403, message: "Você não tem permissão para editar esse usuário");
+
         var user = await _userRepository.GetAsync(id);
 
         if (user == null)

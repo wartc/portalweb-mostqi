@@ -10,6 +10,15 @@ public class AuthorizationUtils
 
     public AuthorizationUtils(UserRepository userRepository) => _userRepository = userRepository;
 
+    public static bool UserHasPermission(string id, ClaimsPrincipal user)
+    {
+        var userType = user.Claims.FirstOrDefault(c => c.Type == "type")?.Value;
+        var requestingUserId = user.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+
+        if (userType == UserType.CONTRIBUTOR.ToString()) return true;
+
+        return requestingUserId == id;
+    }
 
     public async Task<User?> GetRequestingUser(ClaimsPrincipal user)
     {
