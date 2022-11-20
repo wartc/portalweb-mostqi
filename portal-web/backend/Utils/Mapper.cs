@@ -21,7 +21,7 @@ public static class Mapper
     {
         Name = request.Name,
         Email = request.Email,
-        Type = request.Type,
+        Type = UserType.CLIENT,
         ClientDetails = request.ClientDetails,
         CreatedBy = null,
         CreatedAt = DateTime.UtcNow,

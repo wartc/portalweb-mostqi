@@ -9,8 +9,5 @@ public record CreateUserRequest
 
     public string Email { get; init; } = null!;
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public UserType Type { get; init; }
-
     public UserClientDetails? ClientDetails { get; init; }
 }
