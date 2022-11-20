@@ -9,8 +9,10 @@ import Loading from "../../components/Loading";
 import styles from "./styles.module.scss";
 import Table from "../../components/Table";
 import Input from "../../components/Input";
+import { useRouter } from "next/router";
 
 const Clients = () => {
+  const router = useRouter();
   const { data: users, isLoading, isError } = useQuery("users", getUsers);
 
   if (isLoading) return <Loading visible={true} />;
@@ -33,11 +35,11 @@ const Clients = () => {
       </span>
       <Table
         columns={[
-          { key: "name", title: "Nome" },
-          { key: "email", title: "Email" },
+          { key: "name", title: "NOME" },
+          { key: "email", title: "EMAIL" },
           {
             key: "createdAt",
-            title: "Cadastrado em",
+            title: "CADASTRADO EM",
             render: (user) => {
               const created = new Date(user.createdAt);
 
@@ -49,6 +51,9 @@ const Clients = () => {
           },
         ]}
         data={users!}
+        onRowClick={(user) => {
+          router.push(`/clients/${user.id}`);
+        }}
       />
     </div>
   );
