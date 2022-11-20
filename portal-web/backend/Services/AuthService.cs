@@ -13,7 +13,7 @@ namespace PortalWeb.Services;
 
 public class AuthService
 {
-    private const int REFRESH_TOKEN_EXPIRATION_TIME = 60 * 24; // 24 horas
+    private const int REFRESH_TOKEN_EXPIRATION_TIME_HOURS = 48;
     private readonly UserRepository _userRepository;
     private readonly IConfiguration _configuration;
 
@@ -27,7 +27,7 @@ public class AuthService
     {
         response.Cookies.Append("refreshToken", GenerateRefreshToken(userId), new CookieOptions
         {
-            Expires = DateTime.UtcNow.AddDays(REFRESH_TOKEN_EXPIRATION_TIME),
+            Expires = DateTime.UtcNow.AddHours(REFRESH_TOKEN_EXPIRATION_TIME_HOURS),
             HttpOnly = true,
             Secure = true,
             Path = "/",
@@ -70,11 +70,11 @@ public class AuthService
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId),
-            new Claim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddDays(REFRESH_TOKEN_EXPIRATION_TIME).ToUnixTimeSeconds().ToString()),
+            new Claim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddDays(REFRESH_TOKEN_EXPIRATION_TIME_HOURS).ToUnixTimeSeconds().ToString()),
             new Claim("SigningKey", Hasher.Hash(_configuration["Jwt:RefreshKey"]!))
         };
 
-        return GenerateJWT(claims, REFRESH_TOKEN_EXPIRATION_TIME);
+        return GenerateJWT(claims, REFRESH_TOKEN_EXPIRATION_TIME_HOURS * 60);
     }
 
     private bool ValidateRefreshToken(User user, string token)
