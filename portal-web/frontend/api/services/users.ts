@@ -6,5 +6,5 @@ export const getUsers = async (page: number, size: number): Promise<PaginatedRes
 };
 
 export const getUser = async (id: string): Promise<User> => {
-  return request("get", `/users`, null, { id });
+  return request("get", `/users/${id}`);
 };

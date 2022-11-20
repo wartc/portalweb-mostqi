@@ -12,6 +12,7 @@ import styles from "./styles.module.scss";
 import Table from "../../components/Table";
 import Input from "../../components/Input";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
+import UnexpectedError from "../../components/UnexpectedError";
 
 const MAX_PAGE_SIZE = 10;
 
@@ -30,12 +31,7 @@ const Clients = () => {
 
   if (isLoading) return <Loading visible={true} />;
 
-  if (isError)
-    return (
-      <div className={styles.errorContainer}>
-        <h1>Um erro inesperado ocorreu 😞</h1>
-      </div>
-    );
+  if (isError) return <UnexpectedError />;
 
   const hasPreviousPages = page > 1;
   const hasMorePages = !isPreviousData && data?.hasNextPage;

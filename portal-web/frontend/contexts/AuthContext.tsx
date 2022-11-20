@@ -43,12 +43,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(userToSet);
       }
     } else {
+      removeCookie("accessToken");
       setUser(null);
       localStorage.removeItem("user");
     }
 
     setIsLoading(false);
-  }, [cookie.accessToken, user]);
+  }, [cookie.accessToken, removeCookie, user]);
 
   const signIn = async (email: string, password: string) => {
     return login(email, password)

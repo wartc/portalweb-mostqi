@@ -18,7 +18,7 @@ const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
         <ul className={styles.sideNavigationList}>
           <li
             className={`${styles.sideNavigationListItem} ${
-              pathname === "/clients" ? styles.selected : ""
+              /\/clients(?!\/new)/.test(pathname) ? styles.selected : ""
             }`}
             onClick={() => push("/clients")}
           >
