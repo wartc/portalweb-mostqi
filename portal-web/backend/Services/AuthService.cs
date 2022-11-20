@@ -84,8 +84,6 @@ public class AuthService
         var userId = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
         var signingKey = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == "SigningKey")?.Value;
 
-        System.Console.WriteLine($"userId: {userId} , and user.Id: {user.Id}. Are they equal? {userId == user.Id}");
-
         // token expirado
         if (jwtSecurityToken.ValidTo < DateTime.UtcNow) return false;
 
