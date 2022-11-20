@@ -15,10 +15,10 @@
   width: 100%;
   height: 100%;
 
-  .showingLabel {
-    font-size: 0.85rem;
+  .statusLabels {
     margin-bottom: 16px;
     margin-top: 16px;
+    font-size: 0.85rem;
     color: #666;
   }
 
@@ -26,4 +26,12 @@
     margin-bottom: 36px;
     color: #ff4438;
   }
+}
+
+.paginationNavigationContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
 }

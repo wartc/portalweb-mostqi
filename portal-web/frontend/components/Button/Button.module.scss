@@ -1,33 +1,34 @@
 .button {
-    min-height: 3rem;
-    min-width: 50%;
-    font-size: 1.1rem;
-    cursor: pointer;
+  min-height: 3rem;
+  min-width: 50%;
+  width: fit-content;
+  font-size: 1.1rem;
+  cursor: pointer;
 
+  color: white;
+  border: 1px solid tomato;
+  border-radius: 4pt;
+  background-color: tomato;
+
+  &.secondary {
+    color: tomato;
+    background-color: white;
+  }
+
+  &:hover:not(:disabled) {
     color: white;
-    border: 1px solid tomato;
-    border-radius: 4pt;
-    background-color: tomato;
+    background-color: #f63e02;
+    border-color: #f63e02;
+  }
 
-    &.secondary {
-      color: tomato;
-      background-color: white;
-    }
-  
-    &:hover {
-      color: white;
-      background-color: #f63e02;
-      border-color: #f63e02;
-    }
-  
-    &.fluid {
-      width: 100%;
-    }
+  &.fluid {
+    width: 100%;
+  }
 
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 
-    transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
 }

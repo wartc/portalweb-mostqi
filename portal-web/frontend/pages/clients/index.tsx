@@ -11,8 +11,9 @@ import Loading from "../../components/Loading";
 import styles from "./styles.module.scss";
 import Table from "../../components/Table";
 import Input from "../../components/Input";
+import Button from "../../components/Button";
 
-const MAX_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 2;
 
 const Clients = () => {
   const router = useRouter();
@@ -45,7 +46,7 @@ const Clients = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <span className={styles.showingLabel}>
+      <span className={styles.statusLabels}>
         Exibindo {data!.data.length} {data!.data.length > 1 ? "clientes" : "cliente"}
       </span>
       <Table
@@ -70,6 +71,23 @@ const Clients = () => {
           router.push(`/clients/${user.id}`);
         }}
       />
+      <span className={styles.statusLabels}>Página atual: {page}</span>
+      <div className={styles.paginationNavigationContainer}>
+        <Button
+          onClick={() => setPage((old) => Math.max(old - 1, 1))}
+          disabled={page === 1}
+          text="Página anterior"
+        />
+        <Button
+          onClick={() => {
+            if (!isPreviousData && data?.hasNextPage) {
+              setPage((old) => old + 1);
+            }
+          }}
+          disabled={isPreviousData || !data?.hasNextPage}
+          text="Próxima página"
+        />
+      </div>
     </div>
   );
 };
