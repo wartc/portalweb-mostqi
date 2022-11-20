@@ -15,7 +15,7 @@ public class ClientsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "CONTRIBUTOR")]
-    public async Task<ActionResult<List<UserResponse>>> GetClients(int page, int size)
+    public async Task<ActionResult<PaginatedUserResponse>> GetClients(int page, int size)
     {
         var response = await _clientService.GetClientsAsync(page, size);
 
@@ -27,7 +27,7 @@ public class ClientsController : ControllerBase
 
     [HttpGet("search")]
     [Authorize(Roles = "CONTRIBUTOR")]
-    public async Task<ActionResult<List<UserResponse>>> GetClientsByName(string name, int page, int size)
+    public async Task<ActionResult<PaginatedUserResponse>> GetClientsByName(string name, int page, int size)
     {
         var response = await _clientService.GetClientsByNameAsync(name, page, size);
 

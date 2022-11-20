@@ -11,31 +11,47 @@ public class ClientService
 
     public ClientService(ClientRepository clientRepository) => _clientRepository = clientRepository;
 
-    public async Task<ServiceResponse<List<UserResponse>>> GetClientsAsync(int page, int size)
+    public async Task<ServiceResponse<PaginatedUserResponse>> GetClientsAsync(int page, int size)
     {
         var clients = await _clientRepository.GetClientsAsync(page, size);
 
         if (clients == null)
         {
-            return new ServiceResponse<List<UserResponse>>(false, message: "Não foi possível obter os clientes");
+            return new ServiceResponse<PaginatedUserResponse>(false, message: "Não foi possível obter os clientes");
         }
 
-        var clientsResponse = clients.Select(Mapper.MapUserResponse).ToList();
+        bool hasNextPage = false;
 
-        return new ServiceResponse<List<UserResponse>>(true, clientsResponse, (int)HttpStatusCode.OK);
+        if (clients.Count > size)
+        {
+            hasNextPage = true;
+            clients.RemoveAt(clients.Count - 1);
+        }
+
+        var clientsResponse = Mapper.MapPaginatedUserResponse(clients, hasNextPage);
+
+        return new ServiceResponse<PaginatedUserResponse>(true, clientsResponse, (int)HttpStatusCode.OK);
     }
 
-    public async Task<ServiceResponse<List<UserResponse>>> GetClientsByNameAsync(string name, int page, int size)
+    public async Task<ServiceResponse<PaginatedUserResponse>> GetClientsByNameAsync(string name, int page, int size)
     {
         var clients = await _clientRepository.GetClientsByNameAsync(name, page, size);
 
         if (clients == null)
         {
-            return new ServiceResponse<List<UserResponse>>(false, message: "Não foi possível obter os clientes");
+            return new ServiceResponse<PaginatedUserResponse>(false, message: "Não foi possível obter os clientes");
         }
 
-        var clientsResponse = clients.Select(Mapper.MapUserResponse).ToList();
+        bool hasNextPage = false;
 
-        return new ServiceResponse<List<UserResponse>>(true, clientsResponse, (int)HttpStatusCode.OK);
+        if (clients.Count > size)
+        {
+            hasNextPage = true;
+            clients.RemoveAt(clients.Count - 1);
+        }
+
+        var clientsResponse = Mapper.MapPaginatedUserResponse(clients, hasNextPage);
+
+        return new ServiceResponse<PaginatedUserResponse>(true, clientsResponse, (int)HttpStatusCode.OK);
     }
 }

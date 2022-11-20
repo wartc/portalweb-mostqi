@@ -17,6 +17,12 @@ public static class Mapper
         UpdatedAt = user.UpdatedAt
     };
 
+    public static PaginatedUserResponse MapPaginatedUserResponse(List<User> users, bool hasNextPage) => new()
+    {
+        Users = users.Select(MapUserResponse).ToList(),
+        HasNextPage = hasNextPage
+    };
+
     public static User MapUser(CreateUserRequest request) => new()
     {
         Name = request.Name,

@@ -6,7 +6,7 @@ namespace PortalWeb.Repositories;
 
 public class UserRepository
 {
-    const int MAX_PAGE_SIZE = 20;
+    public const int MAX_PAGE_SIZE = 20;
 
     private readonly IMongoCollection<User> _userCollection;
 
@@ -17,9 +17,9 @@ public class UserRepository
 
     public async Task<List<User>> GetAsync(int page, int size)
     {
-        var pageSize = size <= MAX_PAGE_SIZE ? size : MAX_PAGE_SIZE;
+        var pageSize = Math.Min(size, MAX_PAGE_SIZE);
 
-        return await _userCollection.Find(_ => true).Skip(pageSize * (page - 1)).Limit(pageSize).ToListAsync();
+        return await _userCollection.Find(_ => true).Skip(pageSize * (page - 1)).Limit(pageSize + 1).ToListAsync();
     }
 
     public async Task<User> GetAsync(string id) => await _userCollection.Find(u => u.Id == id).FirstOrDefaultAsync();

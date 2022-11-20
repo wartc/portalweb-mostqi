@@ -19,16 +19,24 @@ public class UserService
         _emailService = emailService;
     }
 
-    public async Task<ServiceResponse<List<UserResponse>>> GetUsersAsync(int page, int size)
+    public async Task<ServiceResponse<PaginatedUserResponse>> GetUsersAsync(int page, int size)
     {
         var users = await _userRepository.GetAsync(page, size);
 
         if (users == null)
-            return new ServiceResponse<List<UserResponse>>(false, message: "Erro ao buscar usuários");
+            return new ServiceResponse<PaginatedUserResponse>(false, message: "Erro ao buscar usuários");
 
-        var usersResponse = users.Select(Mapper.MapUserResponse).ToList();
+        bool hasNextPage = false;
 
-        return new ServiceResponse<List<UserResponse>>(true, usersResponse, (int)HttpStatusCode.OK);
+        if (users.Count > size)
+        {
+            hasNextPage = true;
+            users.RemoveAt(users.Count - 1);
+        }
+
+        var usersResponse = Mapper.MapPaginatedUserResponse(users, hasNextPage);
+
+        return new ServiceResponse<PaginatedUserResponse>(true, usersResponse, (int)HttpStatusCode.OK);
     }
 
     public async Task<ServiceResponse<UserResponse>> GetUserAsync(string id, ClaimsPrincipal requestingUser)

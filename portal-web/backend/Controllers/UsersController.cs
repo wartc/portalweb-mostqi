@@ -15,7 +15,7 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "CONTRIBUTOR")]
-    public async Task<ActionResult<List<UserResponse>>> Get(int page, int size)
+    public async Task<ActionResult<PaginatedUserResponse>> Get(int page, int size)
     {
         var response = await _userService.GetUsersAsync(page, size);
 
