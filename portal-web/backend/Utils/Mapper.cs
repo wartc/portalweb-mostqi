@@ -19,7 +19,7 @@ public static class Mapper
 
     public static PaginatedUserResponse MapPaginatedUserResponse(List<User> users, bool hasNextPage) => new()
     {
-        Users = users.Select(MapUserResponse).ToList(),
+        Data = users.Select(MapUserResponse).ToList(),
         HasNextPage = hasNextPage
     };
 
