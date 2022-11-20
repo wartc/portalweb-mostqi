@@ -7,9 +7,43 @@
   padding: 2rem 1rem;
 }
 
-.clientSelfie {
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  object-fit: cover;
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 10%;
+
+  .clientSelfie {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin-bottom: 2rem;
+    object-fit: cover;
+  }
+
+  .clientName {
+    color: #ff4438;
+  }
+}
+.clientDetails {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  div {
+    margin-bottom: 15px;
+  }
+}
+
+.clientBoxContainer {
+  position: relative;
+}
+
+.goBack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 1rem 0 0 1rem;
+  color: #ff4438;
+  cursor: pointer;
 }
