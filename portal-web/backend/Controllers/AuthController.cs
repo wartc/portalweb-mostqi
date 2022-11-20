@@ -17,10 +17,32 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
     {
-        var response = await _authService.LoginAsync(request);
+        var serviceResponse = await _authService.LoginAsync(request);
+
+        if (!serviceResponse.Success)
+            return Problem(statusCode: serviceResponse.StatusCode ?? 500, title: serviceResponse.Message ?? "Erro ao realizar login");
+
+        _authService.SetRefreshTokenCookie(Response, serviceResponse.Data!.User.Id);
+
+        return Ok(serviceResponse.Data);
+    }
+
+    [HttpGet]
+    [Route("refresh")]
+    [Authorize]
+    public async Task<ActionResult<RefreshResponse>> Refresh()
+    {
+        var refreshToken = Request.Cookies["refreshToken"];
+
+        if (string.IsNullOrEmpty(refreshToken))
+            return Problem(statusCode: 401, title: "Token inválido ou expirado");
+
+        var response = await _authService.RefreshAsync(Request.Cookies["refreshToken"]!, User);
 
         if (!response.Success)
-            return Problem(statusCode: response.StatusCode ?? 500, title: response.Message ?? "Erro ao realizar login");
+            return Problem(statusCode: response.StatusCode ?? 500, title: response.Message ?? "Erro ao realizar refresh");
+
+        _authService.SetRefreshTokenCookie(Response, User.Claims.FirstOrDefault(c => c.Type == "id")!.Value);
 
         return Ok(response.Data);
     }

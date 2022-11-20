@@ -1,5 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 
@@ -12,6 +13,7 @@ namespace PortalWeb.Services;
 
 public class AuthService
 {
+    private const int REFRESH_TOKEN_EXPIRATION_TIME = 60 * 24; // 24 horas
     private readonly UserRepository _userRepository;
     private readonly IConfiguration _configuration;
 
@@ -21,11 +23,35 @@ public class AuthService
         _configuration = configuration;
     }
 
-    private string GenerateJWT(User user)
+    public void SetRefreshTokenCookie(HttpResponse response, string userId)
+    {
+        response.Cookies.Append("refreshToken", GenerateRefreshToken(userId), new CookieOptions
+        {
+            Expires = DateTime.UtcNow.AddDays(REFRESH_TOKEN_EXPIRATION_TIME),
+            HttpOnly = true,
+            Secure = true
+        });
+
+    }
+
+    private string GenerateJWT(Claim[] claims, int expirationInMinutes)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+        var token = new JwtSecurityToken(
+            _configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
+            claims,
+            expires: DateTime.Now.AddMinutes(expirationInMinutes),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private string GenerateAccessToken(User user)
+    {
         var claims = new[]
         {
             new Claim("id", user.Id!.ToString()),
@@ -35,15 +61,38 @@ public class AuthService
             new Claim(ClaimTypes.Role, user.Type.ToString())
         };
 
-        var token = new JwtSecurityToken(
-            _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
-            expires: DateTime.Now.AddMinutes(30),
-            signingCredentials: credentials
-        );
+        return GenerateJWT(claims, 30);
+    }
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+    private string GenerateRefreshToken(string userId)
+    {
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, userId),
+            new Claim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddDays(REFRESH_TOKEN_EXPIRATION_TIME).ToUnixTimeSeconds().ToString()),
+            new Claim("SigningKey", Hasher.Hash(_configuration["Jwt:RefreshKey"]!))
+        };
+
+        return GenerateJWT(claims, REFRESH_TOKEN_EXPIRATION_TIME);
+    }
+
+    private bool ValidateRefreshToken(User user, string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtSecurityToken = handler.ReadJwtToken(token);
+
+        var userId = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+        var signingKey = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == "SigningKey")?.Value;
+
+        System.Console.WriteLine($"userId: {userId} , and user.Id: {user.Id}. Are they equal? {userId == user.Id}");
+
+        // token expirado
+        if (jwtSecurityToken.ValidTo < DateTime.UtcNow) return false;
+
+        // token inválido
+        if (signingKey == null || !Hasher.Verify(_configuration["Jwt:RefreshKey"]!, signingKey) || userId != user.Id) return false;
+
+        return true;
     }
 
     public async Task<ServiceResponse<LoginResponse>> LoginAsync(LoginRequest request)
@@ -53,10 +102,27 @@ public class AuthService
         if (user == null || Hasher.Verify(request.Password, user.Password) == false)
             return new ServiceResponse<LoginResponse>(false, 401, "Email ou senha incorretos");
 
-        var token = GenerateJWT(user);
+        var token = GenerateAccessToken(user);
 
         var response = Mapper.MapLoginResponse(user, token);
 
         return new ServiceResponse<LoginResponse>(true, response);
+    }
+
+    public async Task<ServiceResponse<RefreshResponse>> RefreshAsync(string refreshToken, ClaimsPrincipal requestingUser)
+    {
+        var user = await new AuthorizationUtils(_userRepository).GetRequestingUser(requestingUser);
+
+        if (user == null)
+            return new ServiceResponse<RefreshResponse>(false, 401, "Usuário não encontrado");
+
+        if (!ValidateRefreshToken(user, refreshToken))
+            return new ServiceResponse<RefreshResponse>(false, 401, "Token inválido ou expirado");
+
+        var token = GenerateAccessToken(user);
+
+        var response = Mapper.MapRefreshResponse(token);
+
+        return new ServiceResponse<RefreshResponse>(true, response);
     }
 }

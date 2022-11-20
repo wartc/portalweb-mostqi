@@ -49,4 +49,9 @@ public static class Mapper
         Email = user.Email,
         Type = user.Type,
     };
+
+    public static RefreshResponse MapRefreshResponse(string token) => new()
+    {
+        Token = token
+    };
 }
