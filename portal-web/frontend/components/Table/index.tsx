@@ -1,36 +1,33 @@
 import styles from "./Table.module.scss";
 
-type TableProps = {
+type TableProps<T> = {
+  data: T[];
   columns: {
-    dataIndex: string;
-    displayName: string;
-  }[];
-  data: {
-    [key: string]: any;
+    key: string;
+    title: string;
+    render?: (value: T) => React.ReactNode;
   }[];
 };
 
-const Table = ({ columns, data }: TableProps) => {
+export default function Table<T extends { [key: string]: any }>({ data, columns }: TableProps<T>) {
   return (
     <table className={styles.table}>
       <thead>
         <tr>
-          {columns.map(({ displayName }, i) => (
-            <th key={i}>{displayName}</th>
+          {columns.map((col, i) => (
+            <th key={i}>{col.title}</th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {data.map((currentData, i) => (
-          <tr key={i} onClick={() => (currentData.onClick ? currentData.onClick() : null)}>
-            {columns.map(({ dataIndex }, j) => (
-              <td key={j}>{currentData[dataIndex]}</td>
+        {data.map((item, i) => (
+          <tr key={i}>
+            {columns.map((col, j) => (
+              <td key={j}>{col.render ? col.render(item) : item[col.key]}</td>
             ))}
           </tr>
         ))}
       </tbody>
     </table>
   );
-};
-
-export default Table;
+}

@@ -1,7 +1,6 @@
 import { NextPageWithLayout } from "../_app";
 import { withAuthorization } from "../../helpers/withAuthorization";
 import AuthorizedLayout from "../../layouts/AuthorizedLayout";
-import { useRouter } from "next/router";
 
 import { useQuery } from "react-query";
 import { getUsers } from "../../api/services/users";
@@ -12,7 +11,6 @@ import Table from "../../components/Table";
 import Input from "../../components/Input";
 
 const Clients = () => {
-  const router = useRouter();
   const { data: users, isLoading, isError } = useQuery("users", getUsers);
 
   if (isLoading) return <Loading visible={true} />;
@@ -35,13 +33,22 @@ const Clients = () => {
       </span>
       <Table
         columns={[
-          { dataIndex: "name", displayName: "Nome" },
-          { dataIndex: "email", displayName: "Email" },
+          { key: "name", title: "Nome" },
+          { key: "email", title: "Email" },
+          {
+            key: "createdAt",
+            title: "Cadastrado em",
+            render: (user) => {
+              const created = new Date(user.createdAt);
+
+              return `${created.toLocaleDateString()} às ${created.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}`;
+            },
+          },
         ]}
-        data={users!.map((user) => ({
-          ...user,
-          onClick: () => router.push(`/clients/${user.id}`),
-        }))}
+        data={users!}
       />
     </div>
   );
