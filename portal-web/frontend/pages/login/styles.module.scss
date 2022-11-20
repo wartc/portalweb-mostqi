@@ -1,28 +1,29 @@
 .title {
-    font-size: 2em;
-    text-align: center;
-    align-self: flex-start;
-    color: #ff4438;
+  font-size: 2em;
+  text-align: center;
+  align-self: flex-start;
+  color: #ff4438;
 }
 
 .formContainer {
-    display: flex;
-    height: 100%;
-    width: 30%;
-    flex-direction: column;
-    justify-content: center;
-  
-    h1:first-child {
-      margin-bottom: 30px;
-    }
-  
-    & > *:not(:last-child) {
-      margin-bottom: 20px;
-    }
+  display: flex;
+  height: 100%;
+  width: 30%;
+  flex-direction: column;
+  justify-content: center;
+
+  h1:first-child {
+    margin-bottom: 30px;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: 20px;
+  }
 }
 
 .illustration {
   width: 50%;
+  height: auto;
 
   @media (max-width: 1024px) {
     display: none;

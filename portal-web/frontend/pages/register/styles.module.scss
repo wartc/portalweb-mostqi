@@ -1,56 +1,57 @@
 .title {
-    font-size: 2em;
-    text-align: center;
-    color: #ff4438;
-    align-self: flex-start;
+  font-size: 2em;
+  text-align: center;
+  color: #ff4438;
+  align-self: flex-start;
 
-    &.centered {
-        align-self: center;
-    }
+  &.centered {
+    align-self: center;
+  }
 }
 
 .formContainer {
-    display: flex;
-    width: 35%;
-    flex-direction: column;
-    align-items: center;
-  
-    & > *:not(:last-child) {
-      margin-bottom: 20px;
-    }
-  
-    & > button {
-      margin-top: 5px;
-    }
+  display: flex;
+  width: 35%;
+  flex-direction: column;
+  align-items: center;
+
+  & > *:not(:last-child) {
+    margin-bottom: 20px;
+  }
+
+  & > button {
+    margin-top: 5px;
+  }
 }
 
 .registeredTextContainer {
-    margin-top: 20px;
-    margin-bottom: 30px;
-    font-size: 18px;
-    line-height: 1.75;
-    text-align: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  font-size: 18px;
+  line-height: 1.75;
+  text-align: center;
 }
 
 .registerText {
-    font-size: 0.8rem;
-    align-self: flex-start;
+  font-size: 0.8rem;
+  align-self: flex-start;
 }
 
 .link {
-    text-decoration: underline;
-    color: #f63e02;
+  text-decoration: underline;
+  color: #f63e02;
 }
 
 .illustration {
-    width: 35%;
+  width: 35%;
+  height: auto;
 
-    @media (max-width: 1024px) {
-      display: none;
-    }
+  @media (max-width: 1024px) {
+    display: none;
+  }
 }
 
 .modalIllustration {
-    width: 30%;
-    height: 30%;
+  width: 30%;
+  height: 30%;
 }
