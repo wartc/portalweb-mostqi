@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Claims;
 using System.Net;
 using PortalWeb.Contracts.User;
@@ -43,12 +44,12 @@ public class UserService
     public async Task<ServiceResponse<UserResponse>> CreateAsync(CreateUserRequest request, ClaimsPrincipal requestingUser)
     {
         var user = Mapper.MapUser(request);
-        var generatedPassword = AuthorizationUtils.GenerateRandomPassword();
+        var generatedPassword = new Guid().ToString().Substring(0, 10);
         var hashedPassword = Hasher.Hash(generatedPassword);
 
         var creatorUser = await new AuthorizationUtils(_userRepository).GetRequestingUser(requestingUser);
         user.CreatedBy = creatorUser;
-        user.Password = generatedPassword;
+        user.Password = hashedPassword;
 
         await _userRepository.CreateAsync(user);
 
