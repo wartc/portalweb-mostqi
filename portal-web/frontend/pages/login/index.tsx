@@ -8,9 +8,9 @@ import { useAuth } from "../../contexts/AuthContext";
 
 import DefaultLayout from "../../layouts/DefaultLayout";
 import styles from "./styles.module.scss";
+import inputStyles from "../../styles/Input.module.scss";
 
 import { toast } from "react-hot-toast";
-import Input from "../../components/Input";
 import Button from "../../components/Button";
 import BoxContainer from "../../components/BoxContainer";
 
@@ -47,24 +47,32 @@ const Login: NextPageWithLayout = () => {
       <div className={styles.formContainer}>
         <h1 className={styles.title}>Faça seu login</h1>
 
-        <Input
-          fluid
-          name="email"
-          label="Email"
-          type="email"
-          placeholder="seu@email.com"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <Input
-          fluid
-          name="password"
-          label="Senha"
-          type="password"
-          placeholder="••••••••••••"
-          value={formData.password}
-          onChange={handleChange}
-        />
+        <div className={`${inputStyles.inputContainer} ${inputStyles.fluid}`}>
+          <label htmlFor="email" className={inputStyles.inputLabel}>
+            E-mail
+          </label>
+          <input
+            className={inputStyles.input}
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className={`${inputStyles.inputContainer} ${inputStyles.fluid}`}>
+          <label htmlFor="password" className={inputStyles.inputLabel}>
+            Senha
+          </label>
+          <input
+            className={inputStyles.input}
+            type="password"
+            name="password"
+            placeholder="••••••••••••"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
 
         <Button text="Entrar" fluid onClick={handleLogin} />
 

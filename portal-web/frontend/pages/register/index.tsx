@@ -7,10 +7,10 @@ import { useMutation } from "react-query";
 import { register } from "../../api/services/register";
 
 import styles from "./styles.module.scss";
+import inputStyles from "../../styles/Input.module.scss";
 import DefaultLayout from "../../layouts/DefaultLayout";
 
 import { toast } from "react-hot-toast";
-import Input from "../../components/Input";
 import Button from "../../components/Button";
 import BoxContainer from "../../components/BoxContainer";
 import Modal from "../../components/Modal";
@@ -48,25 +48,32 @@ const Register: NextPageWithLayout = () => {
       <div className={styles.formContainer}>
         <h1 className={styles.title}>Cadastro</h1>
 
-        <Input
-          fluid
-          label="Nome"
-          name="name"
-          type="text"
-          placeholder="Nome completo"
-          value={formData.name}
-          onChange={handleChange}
-        />
+        <div className={`${inputStyles.inputContainer} ${inputStyles.fluid}`}>
+          <label htmlFor="name" className={inputStyles.inputLabel}>
+            Nome
+          </label>
+          <input
+            className={inputStyles.input}
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+          />
+        </div>
 
-        <Input
-          fluid
-          label="Email"
-          name="email"
-          type="email"
-          placeholder="seu@email.com"
-          value={formData.email}
-          onChange={handleChange}
-        />
+        <div className={`${inputStyles.inputContainer} ${inputStyles.fluid}`}>
+          <label htmlFor="email" className={inputStyles.inputLabel}>
+            Email
+          </label>
+          <input
+            className={inputStyles.input}
+            type="email"
+            name="email"
+            placeholder="seu@email.com"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
 
         <Button
           disabled={registerMutation.isLoading}

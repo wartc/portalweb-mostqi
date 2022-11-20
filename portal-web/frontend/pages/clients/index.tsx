@@ -9,9 +9,9 @@ import { getClients, searchClientsByName } from "../../api/services/clients";
 import Loading from "../../components/Loading";
 
 import styles from "./styles.module.scss";
+import inputStyles from "../../styles/Input.module.scss";
 import Table from "../../components/Table";
-import Input from "../../components/Input";
-import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
+import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from "react-icons/fa";
 import UnexpectedError from "../../components/UnexpectedError";
 
 const MAX_PAGE_SIZE = 10;
@@ -39,9 +39,10 @@ const Clients = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.pageTitle}>Clientes</h1>
-      <Input
-        label="Buscar cliente"
-        fluid
+      <input
+        className={inputStyles.input}
+        type="text"
+        placeholder="Buscar cliente"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
@@ -73,12 +74,12 @@ const Clients = () => {
       />
       <span className={styles.statusLabels}>Página atual: {page}</span>
       <div className={styles.paginationNavigationContainer}>
-        <FaArrowCircleLeft
+        <FaRegArrowAltCircleLeft
           onClick={() => setPage((old) => Math.max(old - 1, 1))}
           className={`${styles.paginationArrow} ${!hasPreviousPages ? styles.disabled : ""}`}
           size="2rem"
         />
-        <FaArrowCircleRight
+        <FaRegArrowAltCircleRight
           onClick={() => {
             if (hasMorePages) {
               setPage((old) => old + 1);
