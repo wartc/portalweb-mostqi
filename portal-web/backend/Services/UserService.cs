@@ -46,6 +46,11 @@ public class UserService
 
     public async Task<ServiceResponse<UserResponse>> CreateAsync(CreateUserRequest request, ClaimsPrincipal requestingUser)
     {
+        var existingEmail = await _userRepository.FindByEmailAsync(request.Email);
+
+        if (existingEmail != null)
+            return new ServiceResponse<UserResponse>(false, 400, "Email já cadastrado");
+
         var user = Mapper.MapUser(request);
         var generatedPassword = Hasher.GenerateRandomPassword();
         var hashedPassword = Hasher.Hash(generatedPassword);
