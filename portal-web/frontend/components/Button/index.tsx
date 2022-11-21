@@ -9,10 +9,11 @@ type ButtonProps = {
 const Button = ({ fluid, secondary, text, ...props }: ButtonProps) => (
   <button
     type="button"
+    {...props}
     className={`${styles.button}
       ${fluid ? styles.fluid : ""}
-      ${secondary ? styles.secondary : ""}`}
-    {...props}
+      ${secondary ? styles.secondary : ""}
+      ${props.className}`}
   >
     {text}
   </button>

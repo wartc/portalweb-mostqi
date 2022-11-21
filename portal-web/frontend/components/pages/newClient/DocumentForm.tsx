@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 import styles from "./NewClientForms.module.scss";
 import inputStyles from "../../../styles/Input.module.scss";
 import Button from "../../../components/Button";
+import BoxContainer from "../../BoxContainer";
 
 type DocumentFormProps = {
   onStepSubmit: () => void;
@@ -71,34 +72,43 @@ const DocumentForm = ({ onStepSubmit }: DocumentFormProps) => {
   const fileState = watch("document");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className={inputStyles.inputContainer}>
-        <label data-file className={inputStyles.inputLabel} htmlFor="document">
-          <span>
-            Documento de identificação{" "}
-            <BsUpload size="1.25rem" style={{ marginLeft: 8, display: "inline-flex" }} />
-          </span>
-          {fileState && fileState.length > 0 ? (
-            <span className={inputStyles.fileInputStatus}>
-              Arquivo carregado: {fileState[0].name}
+    <BoxContainer className={styles.boxContainer}>
+      <form className={styles.documentForm} onSubmit={handleSubmit(onSubmit)}>
+        <p>
+          Para começar o cadastro do cliente, por favor envie{" "}
+          <b>um arquivo de imagem do documento de identificação</b>
+        </p>
+
+        <div className={inputStyles.inputContainer}>
+          <label data-file className={inputStyles.inputLabel} htmlFor="document">
+            <span>
+              Documento de identificação{" "}
+              <BsUpload size="1.25rem" style={{ marginLeft: 8, display: "inline-flex" }} />
             </span>
-          ) : null}
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          className={inputStyles.input}
-          id="document"
-          {...register("document", { required: true })}
-        />
-      </div>
+            {fileState && fileState.length > 0 ? (
+              <span className={inputStyles.fileInputStatus}>
+                Arquivo carregado: {fileState[0].name}
+              </span>
+            ) : null}
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            className={inputStyles.input}
+            id="document"
+            {...register("document", { required: true })}
+          />
+        </div>
 
-      {errors.document && (
-        <span className={styles.invalidInputText}>Por favor, selecione um arquivo</span>
-      )}
+        {errors.document && (
+          <span className={styles.invalidInputText}>Por favor, selecione um arquivo</span>
+        )}
 
-      <Button type="submit" text="Enviar documento" />
-    </form>
+        <Button className={styles.submitButton} type="submit" text="Enviar documento" />
+      </form>
+
+      <span className={styles.stepIndicator}>Passo 1/4</span>
+    </BoxContainer>
   );
 };
 
