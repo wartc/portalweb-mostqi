@@ -13,7 +13,7 @@ export type PaginatedResponse<T> = {
   hasNextPage: boolean;
 };
 
-export const request = async <TRequest, TResponse>(
+export const request = <TRequest, TResponse>(
   method: "get" | "post" | "put" | "delete",
   url: string,
   data?: TRequest,

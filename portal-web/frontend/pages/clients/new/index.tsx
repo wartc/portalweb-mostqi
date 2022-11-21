@@ -22,6 +22,8 @@ const AddClient = () => {
       {step === 2 && <MainInformationForm onStepSubmit={() => setStep(3)} />}
 
       {step === 3 && <LivenessForm onStepSubmit={() => setStep(4)} />}
+
+      {step === 4 && <div>Finalizado</div>}
     </div>
   );
 };

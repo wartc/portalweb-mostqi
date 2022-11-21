@@ -1,6 +1,6 @@
 import { request } from "./api";
 
-const contentExtraction = async (data: any) => {
+const contentExtraction = (data: any) => {
   return request("post", "/process-image/content-extraction", data, {
     "Content-Type": "multipart/form-data",
   });
