@@ -13,12 +13,36 @@
   }
 }
 
+.mainInfoForm {
+  width: 100%;
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  div {
+    margin-bottom: 0.75rem;
+  }
+
+  button {
+    margin-top: 1.5rem;
+    margin-bottom: 16px;
+  }
+}
+
 .boxContainer {
   margin-top: 24px;
   position: relative;
   flex-direction: column;
   align-self: center;
   width: fit-content;
+
+  &.fixedWidth {
+    width: 85%;
+    justify-content: flex-start;
+    height: fit-content;
+  }
 }
 
 .submitButton {

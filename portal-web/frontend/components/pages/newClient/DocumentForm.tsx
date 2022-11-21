@@ -107,7 +107,7 @@ const DocumentForm = ({ onStepSubmit }: DocumentFormProps) => {
         <Button className={styles.submitButton} type="submit" text="Enviar documento" />
       </form>
 
-      <span className={styles.stepIndicator}>Passo 1/4</span>
+      <span className={styles.stepIndicator}>Passo 1/3</span>
     </BoxContainer>
   );
 };
