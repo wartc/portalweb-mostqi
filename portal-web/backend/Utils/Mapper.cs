@@ -25,12 +25,18 @@ public static class Mapper
         HasNextPage = hasNextPage
     };
 
-    public static User MapUser(CreateUserRequest request) => new()
+    public static User MapUser(CreateUserRequest request, string uploadedSelfieUrl, string uploadedDocumentUrl) => new()
     {
         Name = request.Name,
         Email = request.Email,
         Type = UserType.CLIENT,
-        ClientDetails = request.ClientDetails,
+        ClientDetails = new()
+        {
+            SelfieUrl = uploadedSelfieUrl,
+            DocumentUrl = uploadedDocumentUrl,
+            Rg = request.ClientDetails!.Rg,
+            Dob = request.ClientDetails!.Dob
+        },
         CreatedBy = null,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow

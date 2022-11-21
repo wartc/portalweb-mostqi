@@ -9,5 +9,16 @@ public record CreateUserRequest
 
     public string Email { get; init; } = null!;
 
-    public UserClientDetails? ClientDetails { get; init; }
+    public UserClientDetailsRequest? ClientDetails { get; init; }
+}
+
+public record UserClientDetailsRequest
+{
+    public string SelfieB64 { get; init; } = null!;
+
+    public string DocumentB64 { get; init; } = null!;
+
+    public string Rg { get; init; } = null!;
+
+    public DateTime Dob { get; init; }
 }

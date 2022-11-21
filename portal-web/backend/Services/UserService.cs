@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Security.Claims;
 using System.Net;
 using PortalWeb.Contracts.User;
@@ -12,11 +11,13 @@ public class UserService
 {
     private readonly UserRepository _userRepository;
     private readonly EmailService _emailService;
+    private readonly ImageRepository _imageRepository;
 
-    public UserService(UserRepository userRepository, EmailService emailService)
+    public UserService(UserRepository userRepository, EmailService emailService, ImageRepository imageRepository)
     {
         _userRepository = userRepository;
         _emailService = emailService;
+        _imageRepository = imageRepository;
     }
 
     public async Task<ServiceResponse<PaginatedUserResponse>> GetUsersAsync(int page, int size)
@@ -59,7 +60,12 @@ public class UserService
         if (existingEmail != null)
             return new ServiceResponse<UserResponse>(false, 400, "Email já cadastrado");
 
-        var user = Mapper.MapUser(request);
+        // upload files to cloudinary
+        var randomToken = Guid.NewGuid().ToString();
+        var selfieUrl = await _imageRepository.UploadImageAsync($"selfie_{randomToken}", request.ClientDetails!.SelfieB64);
+        var documentUrl = await _imageRepository.UploadImageAsync($"document_{randomToken}", request.ClientDetails!.DocumentB64);
+
+        var user = Mapper.MapUser(request, selfieUrl, documentUrl);
         var generatedPassword = Hasher.GenerateRandomPassword();
         var hashedPassword = Hasher.Hash(generatedPassword);
 
