@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "./_app";
 import Router from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import { useMutation } from "react-query";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
-import DefaultLayout from "../../layouts/DefaultLayout";
-import styles from "./styles.module.scss";
-import inputStyles from "../../styles/Input.module.scss";
+import DefaultLayout from "../layouts/DefaultLayout";
+import styles from "./index.module.scss";
+import inputStyles from "../styles/Input.module.scss";
 
 import { toast } from "react-hot-toast";
-import Button from "../../components/Button";
-import BoxContainer from "../../components/BoxContainer";
+import Button from "../components/Button";
+import BoxContainer from "../components/BoxContainer";
 
-import LoginIllustration from "../../public/images/InvestmentIllustration.svg";
+import LoginIllustration from "../public/images/InvestmentIllustration.svg";
 
 type FormValues = {
   email: string;

@@ -33,7 +33,7 @@ export function withAuthorization<T extends WithAuthorizationProps = WithAuthori
     }
 
     if (!user) {
-      Router.push("/login");
+      Router.push("/");
       return null;
     }
 

@@ -93,7 +93,7 @@ const Register: NextPageWithLayout = () => {
 
         <p className={styles.registerText}>
           Já tem uma conta?{" "}
-          <Link className={styles.link} href="/login">
+          <Link className={styles.link} href="/">
             Faça login!
           </Link>
         </p>
@@ -114,7 +114,7 @@ const Register: NextPageWithLayout = () => {
             <p>Verifique sua caixa de mensagens!</p>
           </div>
 
-          <Button text="Ir para o login" secondary onClick={() => router.push("/login")} />
+          <Button text="Ir para o login" secondary onClick={() => router.push("/")} />
         </Modal>
       </div>
     </BoxContainer>
