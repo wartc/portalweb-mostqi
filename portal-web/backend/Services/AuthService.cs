@@ -14,6 +14,7 @@ namespace PortalWeb.Services;
 public class AuthService
 {
     private const int REFRESH_TOKEN_EXPIRATION_TIME_HOURS = 48;
+    private const int ACCESS_TOKEN_EXPIRATION_TIME_MINUTES = 30;
     private readonly UserRepository _userRepository;
     private readonly IConfiguration _configuration;
 
@@ -62,7 +63,7 @@ public class AuthService
             new Claim(ClaimTypes.Role, user.Type.ToString())
         };
 
-        return GenerateJWT(claims, 30);
+        return GenerateJWT(claims, ACCESS_TOKEN_EXPIRATION_TIME_MINUTES);
     }
 
     private string GenerateRefreshToken(string userId)

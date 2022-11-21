@@ -25,13 +25,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     async function getRefreshToken() {
       if (!cookie.accessToken) return;
 
-      const res = await refresh();
-      setCookie("accessToken", res.token);
+      const { token } = await refresh();
+      setCookie("accessToken", token, { path: "/" });
+      api.defaults.headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const interval = setInterval(getRefreshToken, 25 * 60 * 1000); // 25 minutos
+    const interval = setInterval(getRefreshToken, 3 * 60 * 1000); // 25 minutos
     return () => clearInterval(interval);
-  }, [cookie, setCookie]);
+  }, [cookie.accessToken, setCookie]);
 
   useEffect(() => {
     if (cookie.accessToken && !isExpired(cookie.accessToken)) {
@@ -55,7 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return login(email, password)
       .then(({ user, token }) => {
         setUser(user);
-        setCookie("accessToken", token);
+        setCookie("accessToken", token, { path: "/" });
         localStorage.setItem("user", JSON.stringify(user));
 
         return Promise.resolve(user);
