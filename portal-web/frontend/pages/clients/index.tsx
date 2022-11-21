@@ -6,13 +6,13 @@ import { useState } from "react";
 
 import { useQuery } from "react-query";
 import { getClients, searchClientsByNameOrCreator } from "../../api/services/clients";
-import Loading from "../../components/Loading";
 
-import styles from "./styles.module.scss";
+import styles from "../../styles/TablePageLayout.module.scss";
 import inputStyles from "../../styles/Input.module.scss";
 import Table from "../../components/Table";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from "react-icons/fa";
 import UnexpectedError from "../../components/UnexpectedError";
+import LoadingPage from "../../components/LoadingPage";
 
 const MAX_PAGE_SIZE = 10;
 
@@ -31,12 +31,7 @@ const Clients = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  if (isLoading)
-    return (
-      <div className={styles.loadingContainer}>
-        <Loading visible={true} />
-      </div>
-    );
+  if (isLoading) return <LoadingPage />;
 
   if (isError) return <UnexpectedError />;
 

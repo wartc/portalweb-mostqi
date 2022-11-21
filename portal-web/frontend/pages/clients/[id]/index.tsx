@@ -9,23 +9,31 @@ import { getUser } from "../../../api/services/users";
 import styles from "./ClientProfile.module.scss";
 import inputStyles from "../../../styles/Input.module.scss";
 import UnexpectedError from "../../../components/UnexpectedError";
-import Loading from "../../../components/Loading";
 import BoxContainer from "../../../components/BoxContainer";
 import { FaChevronLeft } from "react-icons/fa";
+import LoadingPage from "../../../components/LoadingPage";
 
 const ClientProfile = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["client", id],
     queryFn: () => getUser(id as string),
     enabled: !!id,
   });
 
-  if (isLoading || !data) return <Loading visible />;
+  if (isLoading) return <LoadingPage />;
 
-  if (isError) return <UnexpectedError />;
+  if (isError && (error as { status: number }).status !== 404) return <UnexpectedError />;
+
+  if (!data) {
+    return (
+      <div className={styles.userNotFound}>
+        <h1>Usuário não encontrado 😔</h1>
+      </div>
+    );
+  }
 
   const { name, email, type, createdAt, clientDetails: { selfieUrl, dob } = {} } = data!;
 

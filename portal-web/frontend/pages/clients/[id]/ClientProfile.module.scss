@@ -7,6 +7,16 @@
   padding: 2rem 1rem;
 }
 
+.userNotFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 2rem 1rem;
+}
+
 .header {
   display: flex;
   flex-direction: column;
@@ -25,6 +35,7 @@
     color: #ff4438;
   }
 }
+
 .clientDetails {
   display: flex;
   flex-direction: column;

@@ -29,7 +29,7 @@ export const request = <TRequest, TResponse>(
 
   const onError = (error: { response: string }) => {
     console.error(error.response);
-    return Promise.reject();
+    return Promise.reject(error.response);
   };
 
   return api({
