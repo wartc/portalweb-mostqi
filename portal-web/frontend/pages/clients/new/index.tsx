@@ -4,6 +4,8 @@ import { NextPageWithLayout } from "../../_app";
 import { withAuthorization } from "../../../helpers/withAuthorization";
 import AuthorizedLayout from "../../../layouts/AuthorizedLayout";
 import FormProvider, { useFormData } from "../../../contexts/FormContext";
+import { useQueryClient } from "react-query";
+import { createUser } from "../../../api/services/users";
 
 import styles from "./NewClient.module.scss";
 import Image from "next/image";
@@ -14,14 +16,44 @@ import DocumentForm from "../../../components/pages/newClient/DocumentForm";
 import MainInformationForm from "../../../components/pages/newClient/MainInformationForm";
 import LivenessForm from "../../../components/pages/newClient/LivenessForm";
 import BoxContainer from "../../../components/BoxContainer";
+import toast from "react-hot-toast";
 
 const AddClient = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1); // 1 = Document, 2 = Main Information, 3 = Liveness
   const { data: formData } = useFormData();
 
-  const handleCreateClient = () => {
-    setStep(4);
+  const handleLivenessSubmit = (selfieB64: string) => {
+    toast.promise(
+      createUser({
+        name: formData.name,
+        email: formData.email,
+        clientDetails: {
+          selfieB64,
+          documentB64: formData.document,
+          rg: formData.rg,
+          dob: formData.dob,
+        },
+      }),
+      {
+        loading: "Cadastrando cliente...",
+        success: () => {
+          queryClient.invalidateQueries("users");
+          setStep(4);
+          return "Cliente cadastrado com sucesso!";
+        },
+        error: (err) => {
+          setStep(1);
+          console.log(err);
+          if (err === "Email já cadastrado") {
+            return "Email já cadastrado";
+          }
+
+          return "Erro ao criar cliente.";
+        },
+      }
+    );
   };
 
   return (
@@ -32,7 +64,7 @@ const AddClient = () => {
 
       {step === 2 && <MainInformationForm onStepSubmit={() => setStep(3)} />}
 
-      {step === 3 && <LivenessForm onStepSubmit={handleCreateClient} />}
+      {step === 3 && <LivenessForm onStepSubmit={handleLivenessSubmit} />}
 
       {step === 4 && (
         <BoxContainer className={styles.boxContainer}>

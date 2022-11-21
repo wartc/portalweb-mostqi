@@ -10,8 +10,8 @@ export const FormContext = createContext<FormContextType>({} as FormContextType)
 export default function FormProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState({});
 
-  const setFormValues = (values: any) => {
-    setData((prevValues) => ({
+  const setFormValues = async (values: any) => {
+    await setData((prevValues) => ({
       ...prevValues,
       ...values,
     }));

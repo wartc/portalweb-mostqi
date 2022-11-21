@@ -13,11 +13,11 @@ import BoxContainer from "../../BoxContainer";
 import faceCompare from "../../../api/services/most/faceCompare";
 
 type LivenessFormProps = {
-  onStepSubmit: () => void;
+  onStepSubmit: (selfieB64: string) => void;
 };
 
 const LivenessForm = ({ onStepSubmit }: LivenessFormProps) => {
-  const { data: formData, setFormValues } = useFormData();
+  const { data: formData } = useFormData();
   const {
     register,
     handleSubmit,
@@ -50,24 +50,24 @@ const LivenessForm = ({ onStepSubmit }: LivenessFormProps) => {
       },
     });
 
-    const statusToast = toast.loading("Verificando similaridade do rosto...");
+    toast.promise(
+      faceCompare({
+        faceFileBase64A: formData.document,
+        faceFileBase64B: selfie,
+      }),
+      {
+        loading: "Verificando similaridade do rosto...",
+        success: ({ result }: any) => {
+          if (result.distances[0] > 0.5) return "Rosto não confere com documento.";
 
-    faceCompare({
-      faceFileBase64A: formData.document,
-      faceFileBase64B: selfie,
-    })
-      .then(({ result }) => {
-        if (result.distances[0] > 0.5) {
-          toast.error("Rosto não confere com documento.", { id: statusToast });
-        } else {
-          setFormValues({ selfie });
-          onStepSubmit();
-          toast.success("Rosto confere com documento!", { id: statusToast });
-        }
-      })
-      .catch(() => {
-        toast.error("Erro ao verificar similaridade do rosto", { id: statusToast });
-      });
+          onStepSubmit(selfie);
+          return "Rosto confere com documento!";
+        },
+        error: () => {
+          return "Erro ao verificar similaridade do rosto";
+        },
+      }
+    );
   };
 
   const fileState = watch("livenessVideo");
