@@ -1,6 +1,7 @@
 import contentExtraction from "../../../api/services/most/contentExtraction";
 
 import { useForm } from "react-hook-form";
+import { useFormData } from "../../../contexts/FormContext";
 
 import { BsUpload } from "react-icons/bs";
 import { toast } from "react-hot-toast";
@@ -9,16 +10,45 @@ import inputStyles from "../../../styles/Input.module.scss";
 import Button from "../../../components/Button";
 
 type DocumentFormProps = {
-  onStepSubmit: (data: object[]) => void;
+  onStepSubmit: () => void;
 };
 
 const DocumentForm = ({ onStepSubmit }: DocumentFormProps) => {
+  const { data, setFormValues } = useFormData();
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
+
+  const handleDataIdentification = (data: any) => {
+    const identifiedData: { [key: string]: string | undefined } = {
+      name: undefined,
+      document: undefined,
+      dob: undefined,
+      rg: undefined,
+    };
+
+    data.result.forEach(
+      (result: { fields: Array<{ name: string; value: string }> } & { image: string }) => {
+        identifiedData.name =
+          identifiedData.name ?? result.fields.find((field) => field.name === "nome")?.value;
+
+        identifiedData.dob =
+          identifiedData.dob ??
+          result.fields.find((field) => field.name === "data_nascimento")?.value;
+
+        identifiedData.rg =
+          identifiedData.rg ?? result.fields.find((field) => field.name === "rg")?.value;
+
+        identifiedData.document = identifiedData.document ?? result.image;
+      }
+    );
+
+    setFormValues(identifiedData);
+    onStepSubmit();
+  };
 
   const onSubmit = async (data: any) => {
     const formData = new FormData();
@@ -28,7 +58,7 @@ const DocumentForm = ({ onStepSubmit }: DocumentFormProps) => {
     toast.promise(contentExtraction(formData), {
       loading: "Identificando dados...",
       success: (res) => {
-        onStepSubmit(res as object[]);
+        handleDataIdentification(res as object[]);
         return "Identificação concluída!";
       },
       error: (error) => {

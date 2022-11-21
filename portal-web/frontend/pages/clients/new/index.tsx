@@ -7,46 +7,21 @@ import FormProvider, { useFormData } from "../../../contexts/FormContext";
 import styles from "./NewClient.module.scss";
 import DocumentForm from "../../../components/pages/newClient/DocumentForm";
 import MainInformationForm from "../../../components/pages/newClient/MainInformationForm";
+import LivenessForm from "../../../components/pages/newClient/LivenessForm";
 
 const AddClient = () => {
   const [step, setStep] = useState(1);
-  const { data: formData, setFormValues } = useFormData();
-
-  const handleDataIdentification = (data: any) => {
-    const identifiedData: { [key: string]: string | undefined } = {
-      name: undefined,
-      document: undefined,
-      dob: undefined,
-      rg: undefined,
-    };
-
-    data.result.forEach(
-      (result: { fields: Array<{ name: string; value: string }> } & { image: string }) => {
-        identifiedData.name =
-          identifiedData.name ?? result.fields.find((field) => field.name === "nome")?.value;
-
-        identifiedData.dob =
-          identifiedData.dob ??
-          result.fields.find((field) => field.name === "data_nascimento")?.value;
-
-        identifiedData.rg =
-          identifiedData.rg ?? result.fields.find((field) => field.name === "rg")?.value;
-
-        identifiedData.document = identifiedData.document ?? result.image;
-      }
-    );
-
-    setFormValues(identifiedData);
-    setStep(2);
-  };
+  const { data: formData } = useFormData();
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Adicionar novo cliente</h1>
 
-      {step === 1 && <DocumentForm onStepSubmit={handleDataIdentification} />}
+      {step === 1 && <DocumentForm onStepSubmit={() => setStep(2)} />}
 
       {step === 2 && <MainInformationForm onStepSubmit={() => setStep(3)} />}
+
+      {step === 3 && <LivenessForm onStepSubmit={() => setStep(4)} />}
     </div>
   );
 };
