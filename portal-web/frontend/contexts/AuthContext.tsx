@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const interval = setInterval(getRefreshToken, 3 * 60 * 1000); // 25 minutos
+    const interval = setInterval(getRefreshToken, 25 * 60 * 1000); // 25 minutos
     return () => clearInterval(interval);
   }, [cookie.accessToken, setCookie]);
 
