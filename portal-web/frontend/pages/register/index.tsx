@@ -4,7 +4,7 @@ import { NextPageWithLayout } from "../_app";
 import Image from "next/image";
 import Link from "next/link";
 import { useMutation } from "react-query";
-import { register } from "../../api/services/register";
+import { register as registerUser } from "../../api/services/register";
 
 import styles from "./styles.module.scss";
 import inputStyles from "../../styles/Input.module.scss";
@@ -17,6 +17,7 @@ import Modal from "../../components/Modal";
 
 import RegisterIllustration from "../../public/images/RegisterIllustration.svg";
 import RegisteredIllustration from "../../public/images/RegisteredIllustration.svg";
+import { useForm } from "react-hook-form";
 
 type FormValues = {
   name: string;
@@ -25,16 +26,20 @@ type FormValues = {
 
 const Register: NextPageWithLayout = () => {
   const router = useRouter();
-  const registerMutation = useMutation((data: FormValues) => register(data.name, data.email));
+  const registerMutation = useMutation((data: FormValues) => registerUser(data.name, data.email));
+  const { register, handleSubmit, getValues } = useForm<FormValues>();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState<FormValues>({
-    name: "",
-    email: "",
-  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleRegister = async (data: FormValues) => {
+    toast.promise(registerMutation.mutateAsync(data), {
+      loading: "Cadastrando...",
+      success: () => {
+        setIsModalOpen(true);
+        return "Cadastro realizado com sucesso!";
+      },
+      error: "Não foi possível cadastrar",
+    });
   };
 
   return (
@@ -45,7 +50,7 @@ const Register: NextPageWithLayout = () => {
         alt="Imagem ilustrativa da página de registro"
       />
 
-      <div className={styles.formContainer}>
+      <form onSubmit={handleSubmit(handleRegister)} className={styles.formContainer}>
         <h1 className={styles.title}>Cadastro</h1>
 
         <div className={`${inputStyles.inputContainer} ${inputStyles.fluid}`}>
@@ -55,9 +60,8 @@ const Register: NextPageWithLayout = () => {
           <input
             className={inputStyles.input}
             type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
+            id="name"
+            {...register("name", { required: true })}
           />
         </div>
 
@@ -68,28 +72,13 @@ const Register: NextPageWithLayout = () => {
           <input
             className={inputStyles.input}
             type="email"
-            name="email"
+            id="email"
             placeholder="seu@email.com"
-            value={formData.email}
-            onChange={handleChange}
+            {...register("email", { required: true })}
           />
         </div>
 
-        <Button
-          disabled={registerMutation.isLoading}
-          text="Registrar!"
-          fluid
-          onClick={() =>
-            toast.promise(registerMutation.mutateAsync(formData), {
-              loading: "Cadastrando...",
-              success: () => {
-                setIsModalOpen(true);
-                return "Cadastro realizado com sucesso!";
-              },
-              error: "Não foi possível cadastrar",
-            })
-          }
-        />
+        <Button type="submit" disabled={registerMutation.isLoading} text="Registrar!" fluid />
 
         <p className={styles.registerText}>
           Já tem uma conta?{" "}
@@ -109,14 +98,14 @@ const Register: NextPageWithLayout = () => {
 
           <div className={styles.registeredTextContainer}>
             <p>
-              Quase lá! Um email foi enviado para <b>{formData.email}</b> contendo sua senha.
+              Quase lá! Um email foi enviado para <b>{getValues("email")}</b> contendo sua senha.
             </p>
             <p>Verifique sua caixa de mensagens!</p>
           </div>
 
           <Button text="Ir para o login" secondary onClick={() => router.push("/")} />
         </Modal>
-      </div>
+      </form>
     </BoxContainer>
   );
 };

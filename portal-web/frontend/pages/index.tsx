@@ -15,6 +15,7 @@ import Button from "../components/Button";
 import BoxContainer from "../components/BoxContainer";
 
 import LoginIllustration from "../public/images/InvestmentIllustration.svg";
+import { useForm } from "react-hook-form";
 
 type FormValues = {
   email: string;
@@ -24,18 +25,14 @@ type FormValues = {
 const Login: NextPageWithLayout = () => {
   const { user, signIn } = useAuth();
   const loginMutation = useMutation((data: FormValues) => signIn(data.email, data.password));
-  const [formData, setFormData] = useState<FormValues>({ email: "", password: "" });
+  const { register, handleSubmit } = useForm<FormValues>();
 
   useEffect(() => {
     if (user) Router.push(user.type === "CONTRIBUTOR" ? "/clients" : "/dashboard");
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async () => {
-    toast.promise(loginMutation.mutateAsync(formData), {
+  const handleLogin = async (data: FormValues) => {
+    toast.promise(loginMutation.mutateAsync(data), {
       loading: "Entrando...",
       success: "Bem-vindo!",
       error: "Não foi possível entrar",
@@ -44,7 +41,7 @@ const Login: NextPageWithLayout = () => {
 
   return (
     <BoxContainer>
-      <div className={styles.formContainer}>
+      <form onSubmit={handleSubmit(handleLogin)} className={styles.formContainer}>
         <h1 className={styles.title}>Faça seu login</h1>
 
         <div className={`${inputStyles.inputContainer} ${inputStyles.fluid}`}>
@@ -54,9 +51,8 @@ const Login: NextPageWithLayout = () => {
           <input
             className={inputStyles.input}
             type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            id="email"
+            {...register("email", { required: true })}
           />
         </div>
 
@@ -67,14 +63,13 @@ const Login: NextPageWithLayout = () => {
           <input
             className={inputStyles.input}
             type="password"
-            name="password"
+            id="password"
             placeholder="••••••••••••"
-            value={formData.password}
-            onChange={handleChange}
+            {...register("password", { required: true })}
           />
         </div>
 
-        <Button text="Entrar" fluid onClick={handleLogin} />
+        <Button type="submit" text="Entrar" fluid />
 
         <p style={{ fontSize: "0.8rem" }}>
           Não tem uma conta?{" "}
@@ -82,7 +77,7 @@ const Login: NextPageWithLayout = () => {
             Registre-se aqui!
           </Link>
         </p>
-      </div>
+      </form>
 
       <Image
         className={styles.illustration}
