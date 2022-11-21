@@ -13,7 +13,6 @@ import Table from "../../components/Table";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from "react-icons/fa";
 import UnexpectedError from "../../components/UnexpectedError";
 import LoadingPage from "../../components/LoadingPage";
-import Image from "next/image";
 
 const MAX_PAGE_SIZE = 10;
 
