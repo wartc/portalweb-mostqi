@@ -10,8 +10,9 @@ import styles from "./ClientProfile.module.scss";
 import inputStyles from "../../../styles/Input.module.scss";
 import UnexpectedError from "../../../components/UnexpectedError";
 import BoxContainer from "../../../components/BoxContainer";
-import { FaChevronLeft } from "react-icons/fa";
 import LoadingPage from "../../../components/LoadingPage";
+import { FaChevronLeft } from "react-icons/fa";
+import Image from "next/image";
 
 const ClientProfile = () => {
   const router = useRouter();
@@ -43,7 +44,13 @@ const ClientProfile = () => {
         <FaChevronLeft className={styles.goBack} size="2rem" onClick={() => router.back()} />
 
         <div className={styles.header}>
-          <img className={styles.clientSelfie} src={selfieUrl} alt="Selfie do cliente" />
+          <Image
+            src={selfieUrl!}
+            alt="Foto do usuário"
+            className={styles.clientSelfie}
+            width={200}
+            height={200}
+          />
           <h1 className={styles.clientName}>{name}</h1>
         </div>
 

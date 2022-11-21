@@ -13,6 +13,7 @@ import Table from "../../components/Table";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from "react-icons/fa";
 import UnexpectedError from "../../components/UnexpectedError";
 import LoadingPage from "../../components/LoadingPage";
+import Image from "next/image";
 
 const MAX_PAGE_SIZE = 10;
 
@@ -44,7 +45,7 @@ const Clients = () => {
       <input
         className={inputStyles.input}
         type="text"
-        placeholder="Buscar cliente"
+        placeholder="Buscar cliente por nome"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />

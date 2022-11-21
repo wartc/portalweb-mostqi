@@ -4,6 +4,7 @@ import styles from "./AuthorizedLayout.module.scss";
 import { useAuth } from "../../contexts/AuthContext";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { BsClockHistory } from "react-icons/bs";
 
 const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -18,13 +19,24 @@ const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
         <ul className={styles.sideNavigationList}>
           <li
             className={`${styles.sideNavigationListItem} ${
-              /\/clients(?!\/new)/.test(pathname) ? styles.selected : ""
+              /\/clients(?!(\/new)|(\/history))/.test(pathname) ? styles.selected : ""
             }`}
             onClick={() => push("/clients")}
           >
             <FaUsers size="1.5em" style={{ minWidth: "1.5em" }} />
             {!isMinimized ? <span className={styles.itemLink}>Clientes</span> : null}
           </li>
+
+          <li
+            className={`${styles.sideNavigationListItem} ${
+              pathname === "/clients/history" ? styles.selected : ""
+            }`}
+            onClick={() => push("/clients/history")}
+          >
+            <BsClockHistory size="1.5em" style={{ minWidth: "1.5em" }} />
+            {!isMinimized ? <span className={styles.itemLink}>Histórico</span> : null}
+          </li>
+
           <li
             className={`${styles.sideNavigationListItem} ${
               pathname === "/clients/new" ? styles.selected : ""
