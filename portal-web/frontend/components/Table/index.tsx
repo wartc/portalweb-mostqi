@@ -1,12 +1,20 @@
 import styles from "./Table.module.scss";
 
+type ColumnWithDataContent = {
+  key: string;
+  title: string;
+  render?: never;
+};
+
+type ColumnWithRenderContent<T> = {
+  key?: never;
+  title?: string;
+  render: (item: T) => React.ReactNode;
+};
+
 type TableProps<T> = {
   data: T[];
-  columns: {
-    key: string;
-    title: string;
-    render?: (item: T) => React.ReactNode;
-  }[];
+  columns: (ColumnWithDataContent | ColumnWithRenderContent<T>)[];
   onRowClick?: (item: T) => void;
   emptyMessage?: string;
 };
@@ -31,7 +39,11 @@ export default function Table<T extends { [key: string]: any }>({
           {data.map((item, i) => (
             <tr key={i} onClick={() => (onRowClick ? onRowClick(item) : null)}>
               {columns.map((col, j) => (
-                <td key={j}>{col.render ? col.render(item) : item[col.key]}</td>
+                <td key={j}>
+                  {col.render
+                    ? col.render(item)
+                    : (col.key.split(".").reduce((p, prop) => p[prop], item) as unknown as string)}
+                </td>
               ))}
             </tr>
           ))}

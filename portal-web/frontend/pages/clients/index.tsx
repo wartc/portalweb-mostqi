@@ -52,14 +52,14 @@ const Clients = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
       <span className={styles.statusLabels}>
-        Exibindo {data!.data.length} {data!.data.length > 1 ? "clientes" : "cliente"}
+        Exibindo {data!.data.length} {data!.data.length === 1 ? "cliente" : "clientes"}
       </span>
       <Table
         columns={[
           { key: "name", title: "NOME" },
           { key: "email", title: "EMAIL" },
+          { key: "clientDetails.rg", title: "RG" },
           {
-            key: "createdAt",
             title: "CADASTRADO EM",
             render: (user) => {
               const created = new Date(user.createdAt);
