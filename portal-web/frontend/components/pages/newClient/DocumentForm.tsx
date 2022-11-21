@@ -97,7 +97,7 @@ const DocumentForm = ({ onStepSubmit }: DocumentFormProps) => {
         <span className={styles.invalidInputText}>Por favor, selecione um arquivo</span>
       )}
 
-      <Button type="submit" text="Subir documento" />
+      <Button type="submit" text="Enviar documento" />
     </form>
   );
 };
