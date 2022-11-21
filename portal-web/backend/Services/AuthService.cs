@@ -14,7 +14,7 @@ namespace PortalWeb.Services;
 public class AuthService
 {
     private const int REFRESH_TOKEN_EXPIRATION_TIME_HOURS = 48;
-    private const int ACCESS_TOKEN_EXPIRATION_TIME_MINUTES = 30;
+    private const int ACCESS_TOKEN_EXPIRATION_TIME_MINUTES = 1;
     private readonly UserRepository _userRepository;
     private readonly IConfiguration _configuration;
 
@@ -78,7 +78,7 @@ public class AuthService
         return GenerateJWT(claims, REFRESH_TOKEN_EXPIRATION_TIME_HOURS * 60);
     }
 
-    private bool ValidateRefreshToken(User user, string token)
+    private async Task<User?> ValidateRefreshTokenAsync(string token)
     {
         var handler = new JwtSecurityTokenHandler();
         var jwtSecurityToken = handler.ReadJwtToken(token);
@@ -87,12 +87,14 @@ public class AuthService
         var signingKey = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == "SigningKey")?.Value;
 
         // token expirado
-        if (jwtSecurityToken.ValidTo < DateTime.UtcNow) return false;
+        if (jwtSecurityToken.ValidTo < DateTime.UtcNow) return null;
 
         // token inválido
-        if (signingKey == null || !Hasher.Verify(_configuration["Jwt:RefreshKey"]!, signingKey) || userId != user.Id) return false;
+        if (signingKey == null || !Hasher.Verify(_configuration["Jwt:RefreshKey"]!, signingKey)) return null;
 
-        return true;
+        var user = await _userRepository.GetAsync(userId!);
+
+        return user;
     }
 
     public async Task<ServiceResponse<LoginResponse>> LoginAsync(LoginRequest request)
@@ -109,19 +111,16 @@ public class AuthService
         return new ServiceResponse<LoginResponse>(true, response);
     }
 
-    public async Task<ServiceResponse<RefreshResponse>> RefreshAsync(string refreshToken, ClaimsPrincipal requestingUser)
+    public async Task<ServiceResponse<RefreshResponse>> RefreshAsync(string refreshToken)
     {
-        var user = await new AuthorizationUtils(_userRepository).GetRequestingUser(requestingUser);
+        var user = await ValidateRefreshTokenAsync(refreshToken);
 
-        if (user == null)
-            return new ServiceResponse<RefreshResponse>(false, 401, "Usuário não encontrado");
-
-        if (!ValidateRefreshToken(user, refreshToken))
+        if (user is null)
             return new ServiceResponse<RefreshResponse>(false, 401, "Token inválido ou expirado");
 
         var token = GenerateAccessToken(user);
 
-        var response = Mapper.MapRefreshResponse(token);
+        var response = Mapper.MapRefreshResponse(user, token);
 
         return new ServiceResponse<RefreshResponse>(true, response);
     }

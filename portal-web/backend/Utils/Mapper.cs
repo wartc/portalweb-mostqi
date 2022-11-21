@@ -56,8 +56,9 @@ public static class Mapper
         Type = user.Type,
     };
 
-    public static RefreshResponse MapRefreshResponse(string token) => new()
+    public static RefreshResponse MapRefreshResponse(User user, string token) => new()
     {
+        User = MapUserResponse(user),
         Token = token
     };
 }

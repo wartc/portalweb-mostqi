@@ -5,6 +5,6 @@ export const login = (email: string, password: string): Promise<{ user: User; to
   return request("post", "/login", { email, password });
 };
 
-export const refresh = (): Promise<{ token: string }> => {
+export const refresh = (): Promise<{ user: User; token: string }> => {
   return request("post", "/refresh");
 };
