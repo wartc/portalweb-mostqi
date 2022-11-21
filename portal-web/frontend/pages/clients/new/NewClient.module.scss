@@ -22,7 +22,7 @@
   }
 
   p {
-    margin: 1rem 0;
+    margin: 1.5rem 0;
     font-size: 1.2rem;
   }
 }
@@ -31,4 +31,14 @@
   width: 25%;
   height: auto;
   object-fit: contain;
+}
+
+.boxContainer {
+  margin-top: 24px;
+  position: relative;
+  flex-direction: column;
+  align-self: center;
+  width: 85%;
+  justify-content: flex-start;
+  height: fit-content;
 }

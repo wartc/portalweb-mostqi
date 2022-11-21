@@ -13,6 +13,7 @@ import Button from "../../../components/Button";
 import DocumentForm from "../../../components/pages/newClient/DocumentForm";
 import MainInformationForm from "../../../components/pages/newClient/MainInformationForm";
 import LivenessForm from "../../../components/pages/newClient/LivenessForm";
+import BoxContainer from "../../../components/BoxContainer";
 
 const AddClient = () => {
   const router = useRouter();
@@ -34,24 +35,26 @@ const AddClient = () => {
       {step === 3 && <LivenessForm onStepSubmit={handleCreateClient} />}
 
       {step === 4 && (
-        <div className={styles.success}>
-          <h2>Novo cliente cadastrado com sucesso!</h2>
-          <Image
-            className={styles.illustration}
-            src={ClientRegistratedIllustration}
-            alt="Imagem ilustrativa de cadastro completo"
-          />
-          <p>
-            A senha para acessar o sistema foi enviada para o email do cliente{" "}
-            <b>{formData.email}</b>!
-          </p>
+        <BoxContainer className={styles.boxContainer}>
+          <div className={styles.success}>
+            <h2>Novo cliente cadastrado com sucesso!</h2>
+            <Image
+              className={styles.illustration}
+              src={ClientRegistratedIllustration}
+              alt="Imagem ilustrativa de cadastro completo"
+            />
+            <p>
+              A senha para acessar o sistema foi enviada para o email do cliente{" "}
+              <b>{formData.email}</b>!
+            </p>
 
-          <Button
-            secondary
-            text="Voltar para a página de clientes"
-            onClick={() => router.push("/clients")}
-          />
-        </div>
+            <Button
+              secondary
+              text="Voltar para a página de clientes"
+              onClick={() => router.push("/clients")}
+            />
+          </div>
+        </BoxContainer>
       )}
     </div>
   );

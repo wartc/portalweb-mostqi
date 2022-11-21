@@ -5,9 +5,11 @@ import liveness from "../../../api/services/most/liveness";
 
 import styles from "./NewClientForms.module.scss";
 import inputStyles from "../../../styles/Input.module.scss";
+
 import { BsUpload } from "react-icons/bs";
-import Button from "../../Button";
 import toast from "react-hot-toast";
+import Button from "../../Button";
+import BoxContainer from "../../BoxContainer";
 import faceCompare from "../../../api/services/most/faceCompare";
 
 type LivenessFormProps = {
@@ -71,34 +73,42 @@ const LivenessForm = ({ onStepSubmit }: LivenessFormProps) => {
   const fileState = watch("livenessVideo");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className={inputStyles.inputContainer}>
-        <label data-file className={inputStyles.inputLabel} htmlFor="livenessVideo">
-          <span>
-            Prova de vida (vídeo de até 2MB){" "}
-            <BsUpload size="1.25rem" style={{ marginLeft: 8, display: "inline-flex" }} />
-          </span>
-          {fileState && fileState.length > 0 ? (
-            <span className={inputStyles.fileInputStatus}>
-              Arquivo carregado: {fileState[0].name}
+    <BoxContainer className={`${styles.boxContainer} ${styles.fixedWidth}`}>
+      <form className={styles.livenessForm} onSubmit={handleSubmit(onSubmit)}>
+        <p>
+          Para finalizar o cadastro, por favor envie <b>em vídeo uma prova de vida do cliente</b>
+        </p>
+
+        <div className={inputStyles.inputContainer}>
+          <label data-file className={inputStyles.inputLabel} htmlFor="livenessVideo">
+            <span>
+              Prova de vida (vídeo de até 2MB){" "}
+              <BsUpload size="1.25rem" style={{ marginLeft: 8, display: "inline-flex" }} />
             </span>
-          ) : null}
-        </label>
-        <input
-          type="file"
-          accept="video/*"
-          className={inputStyles.input}
-          id="livenessVideo"
-          {...register("livenessVideo", { required: true })}
-        />
-      </div>
+            {fileState && fileState.length > 0 ? (
+              <span className={inputStyles.fileInputStatus}>
+                Arquivo carregado: {fileState[0].name}
+              </span>
+            ) : null}
+          </label>
+          <input
+            type="file"
+            accept="video/*"
+            className={inputStyles.input}
+            id="livenessVideo"
+            {...register("livenessVideo", { required: true })}
+          />
+        </div>
 
-      {errors.livenessVideo && (
-        <span className={styles.invalidInputText}>Por favor, selecione um arquivo</span>
-      )}
+        {errors.livenessVideo && (
+          <span className={styles.invalidInputText}>Por favor, selecione um arquivo</span>
+        )}
 
-      <Button type="submit" text="Enviar vídeo" />
-    </form>
+        <Button type="submit" text="Enviar vídeo" />
+      </form>
+
+      <span className={styles.stepIndicator}>Passo 3/3</span>
+    </BoxContainer>
   );
 };
 
