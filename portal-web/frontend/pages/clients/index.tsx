@@ -29,7 +29,12 @@ const Clients = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  if (isLoading) return <Loading visible={true} />;
+  if (isLoading)
+    return (
+      <div className={styles.loadingContainer}>
+        <Loading visible={true} />
+      </div>
+    );
 
   if (isError) return <UnexpectedError />;
 
