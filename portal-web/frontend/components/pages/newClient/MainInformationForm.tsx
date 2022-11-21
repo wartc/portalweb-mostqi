@@ -1,3 +1,5 @@
+import { useForm } from "react-hook-form";
+
 import { useFormData } from "../../../contexts/FormContext";
 
 type MainInformationFormProps = {
@@ -6,9 +8,9 @@ type MainInformationFormProps = {
 
 const MainInformationForm = ({ onStepSubmit }: MainInformationFormProps) => {
   const { data, setFormValues } = useFormData();
-  console.log(data);
+  const { register, handleSubmit } = useForm();
 
-  return <div>main info form</div>;
+  return <form></form>;
 };
 
 export default MainInformationForm;

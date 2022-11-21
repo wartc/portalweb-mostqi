@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 
 import { BsUpload } from "react-icons/bs";
 import { toast } from "react-hot-toast";
+import styles from "./NewClientForms.module.scss";
 import inputStyles from "../../../styles/Input.module.scss";
 import Button from "../../../components/Button";
 
@@ -12,7 +13,12 @@ type DocumentFormProps = {
 };
 
 const DocumentForm = ({ onStepSubmit }: DocumentFormProps) => {
-  const { register, handleSubmit, watch } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
 
   const onSubmit = async (data: any) => {
     const formData = new FormData();
@@ -53,9 +59,13 @@ const DocumentForm = ({ onStepSubmit }: DocumentFormProps) => {
           accept="image/*"
           className={inputStyles.input}
           id="document"
-          {...register("document")}
+          {...register("document", { required: true })}
         />
       </div>
+
+      {errors.document && (
+        <span className={styles.invalidInputText}>Por favor, selecione um arquivo</span>
+      )}
 
       <Button type="submit" text="Subir documento" />
     </form>

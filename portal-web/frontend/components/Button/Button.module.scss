@@ -3,15 +3,16 @@
   min-width: 50%;
   width: fit-content;
   font-size: 1.1rem;
+  padding: 4px 18px;
   cursor: pointer;
 
   color: white;
-  border: 1px solid tomato;
+  border: 1px solid #ff6f56;
   border-radius: 4pt;
-  background-color: tomato;
+  background-color: #ff6f56;
 
   &.secondary {
-    color: tomato;
+    color: #ff6f56;
     background-color: white;
   }
 
