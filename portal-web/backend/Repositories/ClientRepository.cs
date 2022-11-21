@@ -23,11 +23,11 @@ public class ClientRepository
         return await _userCollection.Find(u => u.Type == UserType.CLIENT).Skip(pageSize * (page - 1)).Limit(pageSize + 1).ToListAsync();
     }
 
-    public async Task<List<User>> GetClientsByNameAsync(string name, int page, int size)
+    public async Task<List<User>> SearchClientsByNameAsync(string name, bool searchByClient, int page, int size)
     {
         var pageSize = Math.Min(size, MAX_PAGE_SIZE);
-        var filter = Builders<User>.Filter.Regex("name", new BsonRegularExpression(name, "i"))
-            & Builders<User>.Filter.Eq("type", UserType.CLIENT);
+        var filter = Builders<User>.Filter.Eq("type", UserType.CLIENT) &
+            Builders<User>.Filter.Regex(searchByClient ? "name" : "createdBy.name", new BsonRegularExpression(name, "i"));
 
         return await _userCollection.Find(filter).Skip(pageSize * (page - 1)).Limit(pageSize + 1).ToListAsync();
     }

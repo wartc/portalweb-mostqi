@@ -27,9 +27,9 @@ public class ClientsController : ControllerBase
 
     [HttpGet("search")]
     [Authorize(Roles = "CONTRIBUTOR")]
-    public async Task<ActionResult<PaginatedUserResponse>> GetClientsByName(string name, int page, int size)
+    public async Task<ActionResult<PaginatedUserResponse>> SearchClientsByName(string name, bool searchByClient, int page, int size)
     {
-        var response = await _clientService.GetClientsByNameAsync(name, page, size);
+        var response = await _clientService.SearchClientsByNameAsync(name, searchByClient, page, size);
 
         if (!response.Success || response.Data == null)
             return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao buscar clientes");

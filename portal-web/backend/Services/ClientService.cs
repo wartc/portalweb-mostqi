@@ -33,9 +33,9 @@ public class ClientService
         return new ServiceResponse<PaginatedUserResponse>(true, clientsResponse, (int)HttpStatusCode.OK);
     }
 
-    public async Task<ServiceResponse<PaginatedUserResponse>> GetClientsByNameAsync(string name, int page, int size)
+    public async Task<ServiceResponse<PaginatedUserResponse>> SearchClientsByNameAsync(string name, bool searchByClient, int page, int size)
     {
-        var clients = await _clientRepository.GetClientsByNameAsync(name, page, size);
+        var clients = await _clientRepository.SearchClientsByNameAsync(name, searchByClient, page, size);
 
         if (clients == null)
         {

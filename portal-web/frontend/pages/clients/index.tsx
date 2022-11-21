@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { useQuery } from "react-query";
-import { getClients, searchClientsByName } from "../../api/services/clients";
+import { getClients, searchClientsByNameOrCreator } from "../../api/services/clients";
 import Loading from "../../components/Loading";
 
 import styles from "./styles.module.scss";
@@ -24,7 +24,9 @@ const Clients = () => {
   const { data, isLoading, isError, isPreviousData } = useQuery({
     queryKey: ["users", { search, page }],
     queryFn: () =>
-      !search ? getClients(page, MAX_PAGE_SIZE) : searchClientsByName(search, page, MAX_PAGE_SIZE),
+      !search
+        ? getClients(page, MAX_PAGE_SIZE)
+        : searchClientsByNameOrCreator(search, true, page, MAX_PAGE_SIZE),
     keepPreviousData: true,
     staleTime: 5 * 60 * 1000,
   });
@@ -59,17 +61,6 @@ const Clients = () => {
           { key: "name", title: "NOME" },
           { key: "email", title: "EMAIL" },
           { key: "clientDetails.rg", title: "RG" },
-          {
-            title: "CADASTRADO EM",
-            render: (user) => {
-              const created = new Date(user.createdAt);
-
-              return `${created.toLocaleDateString()} às ${created.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}`;
-            },
-          },
         ]}
         data={data?.data!}
         onRowClick={(user) => {

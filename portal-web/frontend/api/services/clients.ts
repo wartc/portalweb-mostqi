@@ -5,10 +5,17 @@ export const getClients = (page: number, size: number): Promise<PaginatedRespons
   return request("get", "/clients", null, {}, { page, size });
 };
 
-export const searchClientsByName = (
+export const searchClientsByNameOrCreator = (
   name: string,
+  searchByClient: boolean,
   page: number,
   size: number
 ): Promise<PaginatedResponse<User>> => {
-  return request("get", `/clients/search`, null, { name }, { page, size });
+  return request(
+    "get",
+    `/clients/search`,
+    null,
+    { name, searchByClient: searchByClient.toString() },
+    { page, size }
+  );
 };
