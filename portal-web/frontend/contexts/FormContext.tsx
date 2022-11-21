@@ -1,16 +1,16 @@
 import { useState, createContext, useContext } from "react";
 
-type FormContextType<T = unknown> = {
-  data: Partial<T>;
-  setFormValues: (data: Partial<T>) => void;
+type FormContextType = {
+  data: any;
+  setFormValues: (data: any) => void;
 };
 
 export const FormContext = createContext<FormContextType>({} as FormContextType);
 
-export default function FormProvider<T>({ children }: { children: React.ReactNode }) {
-  const [data, setData] = useState<Partial<T>>({});
+export default function FormProvider({ children }: { children: React.ReactNode }) {
+  const [data, setData] = useState({});
 
-  const setFormValues = (values: Partial<T>) => {
+  const setFormValues = (values: any) => {
     setData((prevValues) => ({
       ...prevValues,
       ...values,

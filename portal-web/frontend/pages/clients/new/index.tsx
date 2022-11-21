@@ -42,7 +42,7 @@ const AddClient = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Adicionar novo cliente</h1>
+      <h1 className={styles.title}>Adicionar novo cliente</h1>
 
       {step === 1 && <DocumentForm onStepSubmit={handleDataIdentification} />}
 
