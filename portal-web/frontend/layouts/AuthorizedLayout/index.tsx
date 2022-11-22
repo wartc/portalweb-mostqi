@@ -5,11 +5,12 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsClockHistory, BsGraphUp } from "react-icons/bs";
+import { FiLogOut } from "react-icons/fi";
 
 const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
   const [isMinimized, setIsMinimized] = useState(false);
   const { push, pathname } = useRouter();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   return (
     <div className={styles.container}>
@@ -69,6 +70,11 @@ const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
           >
             <FaAddressCard size="1.5em" style={{ minWidth: "1.5em" }} />
             {!isMinimized ? <span className={styles.itemLink}>Perfil</span> : null}
+          </li>
+
+          <li className={styles.sideNavigationListItem} onClick={signOut}>
+            <FiLogOut size="1.5rem" style={{ minWidth: "1.5rem" }} />
+            {!isMinimized ? <span className={styles.itemLink}>Sair</span> : null}
           </li>
 
           <li className={styles.minimize} onClick={() => setIsMinimized(!isMinimized)}>
