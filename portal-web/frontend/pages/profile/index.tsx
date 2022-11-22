@@ -6,8 +6,8 @@ const Profile = ({ user }: WithAuthorizationProps) => {
   return <h1>{user.name} profile!</h1>;
 };
 
-const ClientsWithAuthorization: NextPageWithLayout = withAuthorization(Profile);
+const ProfileWithAuthorization: NextPageWithLayout = withAuthorization(Profile);
 
-ClientsWithAuthorization.getLayout = (page) => <AuthorizedLayout>{page}</AuthorizedLayout>;
+ProfileWithAuthorization.getLayout = (page) => <AuthorizedLayout>{page}</AuthorizedLayout>;
 
-export default ClientsWithAuthorization;
+export default ProfileWithAuthorization;
