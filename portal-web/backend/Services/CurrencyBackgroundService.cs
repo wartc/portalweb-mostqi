@@ -17,7 +17,7 @@ public class CurrencyBackgroundService : BackgroundService
         _restClient = new RestClient("https://economia.awesomeapi.com.br/json/last/USD-BRL");
     }
 
-    private Decimal GetCurrentDollarValue()
+    private decimal GetCurrentDollarValue()
     {
         var response = _restClient.Execute(new RestRequest());
         var content = response.Content;
@@ -26,7 +26,7 @@ public class CurrencyBackgroundService : BackgroundService
             throw new Exception("Could not get dollar value");
 
         var res = JsonSerializer.Deserialize<ExchangeApiResponse>(content)!;
-        return Decimal.Parse(res.Exchange.Bid);
+        return decimal.Parse(res.Exchange.Bid);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

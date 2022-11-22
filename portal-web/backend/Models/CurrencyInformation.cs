@@ -13,5 +13,5 @@ public class CurrencyInformation
     public DateTime Time { get; set; }
 
     [BsonRequired]
-    public Decimal DollarExchangeRate { get; set; }
+    public decimal DollarExchangeRate { get; set; }
 }
