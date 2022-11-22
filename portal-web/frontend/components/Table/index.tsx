@@ -37,7 +37,11 @@ export default function Table<T extends { [key: string]: any }>({
         </thead>
         <tbody>
           {data.map((item, i) => (
-            <tr key={i} onClick={() => (onRowClick ? onRowClick(item) : null)}>
+            <tr
+              key={i}
+              className={onRowClick ? styles.clickableRow : ""}
+              onClick={() => (onRowClick ? onRowClick(item) : null)}
+            >
               {columns.map((col, j) => (
                 <td key={j}>
                   {col.render
