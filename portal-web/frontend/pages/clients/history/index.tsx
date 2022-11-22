@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../../_app";
 import { withAuthorization } from "../../../helpers/withAuthorization";
 import AuthorizedLayout from "../../../layouts/AuthorizedLayout";
+import { useDebounce } from "use-debounce";
 
 import { useQuery } from "react-query";
 import { getClients, searchClientsByNameOrCreator } from "../../../api/services/clients";
@@ -22,12 +23,14 @@ const ClientHistory = () => {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState({ searchByClient: true, name: "" });
+  const [value] = useDebounce(search, 250);
+
   const { data, isLoading, isError, isPreviousData } = useQuery({
-    queryKey: ["users", { search, page }],
+    queryKey: ["users", { value, page }],
     queryFn: () =>
-      !search.name
+      !value.name
         ? getClients(page, MAX_PAGE_SIZE)
-        : searchClientsByNameOrCreator(search.name, search.searchByClient, page, MAX_PAGE_SIZE),
+        : searchClientsByNameOrCreator(value.name, value.searchByClient, page, MAX_PAGE_SIZE),
     keepPreviousData: true,
     staleTime: 5 * 60 * 1000,
   });
