@@ -10,6 +10,14 @@ export const api = axios.create({
   withCredentials: true,
 });
 
+const noInterceptAxios = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
+
 api.interceptors.request.use(
   (config) => {
     const token = Cookies.get("accessToken");
@@ -75,7 +83,8 @@ export const request = <TRequest, TResponse>(
   pagination?: {
     page: number;
     size: number;
-  }
+  },
+  noIntercept?: boolean
 ) => {
   const onSuccess = (response: { data: TResponse }) => {
     return Promise.resolve(response.data);
@@ -86,7 +95,7 @@ export const request = <TRequest, TResponse>(
     return Promise.reject(error.response);
   };
 
-  return api({
+  return (noIntercept ? noInterceptAxios : api)({
     method,
     url,
     data,

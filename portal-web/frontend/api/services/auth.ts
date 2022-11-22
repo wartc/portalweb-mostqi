@@ -6,5 +6,5 @@ export const login = (email: string, password: string): Promise<{ user: User; to
 };
 
 export const refresh = (): Promise<{ user: User; token: string }> => {
-  return request("post", "/refresh");
+  return request("post", "/refresh", undefined, undefined, undefined, true);
 };
