@@ -4,7 +4,10 @@ import { withAuthorization } from "../../helpers/withAuthorization";
 import AuthorizedLayout from "../../layouts/AuthorizedLayout";
 
 import { useQuery } from "react-query";
-import { getCurrencyInformation } from "../../api/services/currency";
+import {
+  getCurrencyInformation,
+  getMeanMaxMinCurrencyInformation,
+} from "../../api/services/currency";
 
 import styles from "./Dashboard.module.scss";
 import tablePageStyles from "../../styles/TablePageLayout.module.scss";
@@ -20,23 +23,40 @@ const Dashboard = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState({ start: "", end: "" });
 
-  const { data, isLoading, isError, isPreviousData } = useQuery({
+  const currencyInfoQuery = useQuery({
     queryKey: ["currency", { start: filter.start, end: filter.end, page, MAX_PAGE_SIZE }],
     queryFn: () => getCurrencyInformation(filter.start, filter.end, page, MAX_PAGE_SIZE),
     keepPreviousData: true,
     staleTime: 60 * 1000,
   });
 
+  const currencyMinMaxQuery = useQuery({
+    queryKey: ["currencyMinMax", { start: filter.start, end: filter.end }],
+    queryFn: () => getMeanMaxMinCurrencyInformation(filter.start, filter.end),
+    staleTime: 60 * 1000,
+  });
+
+  if (currencyInfoQuery.isLoading || currencyMinMaxQuery.isLoading) return <LoadingPage />;
+
+  if (currencyInfoQuery.isError || currencyMinMaxQuery.isError) return <UnexpectedError />;
+
   const hasPreviousPages = page > 1;
-  const hasMorePages = !isPreviousData && data?.hasNextPage;
-
-  if (isLoading) return <LoadingPage />;
-
-  if (isError) return <UnexpectedError />;
+  const hasMorePages = !currencyInfoQuery.isPreviousData && currencyInfoQuery.data?.hasNextPage;
+  const numberFormat = new Intl.NumberFormat("pt-BR", {
+    currency: "BRL",
+    style: "currency",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 5,
+  });
 
   return (
     <div className={tablePageStyles.container}>
       <h1 className={tablePageStyles.pageTitle}>Dashboard da cotação do dólar</h1>
+
+      <span className={styles.currencyMinMaxInfo}>
+        Mínima do dia: <span>{numberFormat.format(currencyMinMaxQuery.data?.min || 0)}</span> |
+        Máxima do dia: <span>{numberFormat.format(currencyMinMaxQuery.data?.max || 0)}</span>
+      </span>
 
       <div className={styles.searchContainer}>
         <span>Mostrar registros de</span>{" "}
@@ -68,20 +88,25 @@ const Dashboard = () => {
       </div>
 
       <span className={tablePageStyles.statusLabels}>
-        Exibindo {data!.data.length} {data!.data.length === 1 ? "registro" : "registros"}
+        Exibindo {currencyInfoQuery.data!.data.length}{" "}
+        {currencyInfoQuery.data!.data.length === 1 ? "registro" : "registros"}
       </span>
 
       <Table
         columns={[
           { title: "HORA", render: (cur) => new Date(cur.time).toLocaleString() },
-          { key: "dollarExchangeRate", title: "VALOR DO DÓLAR" },
+          { title: "VALOR DO DÓLAR", render: (cur) => numberFormat.format(cur.dollarExchangeRate) },
         ]}
-        data={data?.data!}
+        data={currencyInfoQuery.data?.data!}
         emptyMessage="Sem registros por aqui... 😞"
       />
 
       <span className={tablePageStyles.statusLabels}>Página atual: {page}</span>
-      <div className={tablePageStyles.paginationNavigationContainer}>
+
+      <div
+        className={tablePageStyles.paginationNavigationContainer}
+        style={{ marginBottom: "1rem" }}
+      >
         <FaRegArrowAltCircleLeft
           onClick={() => setPage((old) => Math.max(old - 1, 1))}
           className={`${tablePageStyles.paginationArrow} ${
