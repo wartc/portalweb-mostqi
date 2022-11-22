@@ -29,7 +29,7 @@ type AppPropsWithLayout = AppProps & {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
+      retry: 1,
     },
   },
 });

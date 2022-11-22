@@ -1,9 +1,7 @@
+import Cookies from "js-cookie";
 import { createContext, useState, useContext, useEffect } from "react";
-import { useCookies } from "react-cookie";
-import { decodeToken, isExpired } from "react-jwt";
 
-import { api } from "../api";
-import { login, refresh } from "../api/services/auth";
+import { login } from "../api/services/auth";
 import { User } from "../types/User";
 
 export type AuthContextType = {
@@ -16,47 +14,25 @@ export type AuthContextType = {
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cookie, setCookie, removeCookie] = useCookies(["accessToken"]);
-
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function getRefreshToken() {
-      if (!cookie.accessToken) return;
-
-      const { token } = await refresh();
-      setCookie("accessToken", token, { path: "/" });
-      api.defaults.headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const interval = setInterval(getRefreshToken, 25 * 60 * 1000); // 25 minutos
-    return () => clearInterval(interval);
-  }, [cookie.accessToken, setCookie]);
-
-  useEffect(() => {
-    if (cookie.accessToken && !isExpired(cookie.accessToken)) {
-      api.defaults.headers["Authorization"] = `Bearer ${cookie.accessToken}`;
-
-      if (!user) {
-        const storedUser = localStorage.getItem("user");
-        const userToSet = JSON.parse(storedUser!);
-        setUser(userToSet);
+    if (user === null) {
+      const userStorage = localStorage.getItem("user");
+      if (userStorage) {
+        setUser(JSON.parse(userStorage));
       }
-    } else {
-      removeCookie("accessToken");
-      setUser(null);
-      localStorage.removeItem("user");
     }
 
     setIsLoading(false);
-  }, [cookie.accessToken, removeCookie, user]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const signIn = async (email: string, password: string) => {
     return login(email, password)
       .then(({ user, token }) => {
         setUser(user);
-        setCookie("accessToken", token, { path: "/" });
+        Cookies.set("accessToken", token, { path: "/" });
         localStorage.setItem("user", JSON.stringify(user));
 
         return Promise.resolve(user);
@@ -67,7 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signOut = () => {
-    removeCookie("accessToken");
+    Cookies.remove("accessToken");
   };
 
   return (
