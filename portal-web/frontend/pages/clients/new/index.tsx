@@ -45,7 +45,7 @@ const AddClient = () => {
         },
         error: (err) => {
           setStep(1);
-          console.log(err);
+          console.error(err);
           if (err.data.title === "Email já cadastrado") {
             return "Email já cadastrado";
           }

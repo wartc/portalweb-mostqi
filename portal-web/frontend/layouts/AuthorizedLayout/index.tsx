@@ -11,8 +11,6 @@ const AuthorizedLayout = ({ children }: { children: React.ReactNode }) => {
   const { push, pathname } = useRouter();
   const { user } = useAuth();
 
-  console.log(user?.type); // todo: render different menu items based on user type
-
   return (
     <div className={styles.container}>
       <nav className={styles.sideNavigation}>

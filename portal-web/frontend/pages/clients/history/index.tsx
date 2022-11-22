@@ -52,7 +52,6 @@ const ClientHistory = () => {
             id="searchBy"
             className={inputStyles.input}
             onChange={(e) => {
-              console.log(e);
               setSearch({ ...search, searchByClient: e.target.value === "client" });
             }}
           >
