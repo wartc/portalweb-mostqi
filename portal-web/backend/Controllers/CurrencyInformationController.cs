@@ -14,9 +14,9 @@ public class CurrencyInformationController : ControllerBase
     public CurrencyInformationController(CurrencyInformationService currencyInformationService) => _currencyInformationService = currencyInformationService;
 
     [HttpGet]
-    public async Task<ActionResult<PaginatedResponse<CurrencyInformationResponse>>> GetDayCurrencyInformationAsync(DateTime day, int page, int size)
+    public async Task<ActionResult<PaginatedResponse<CurrencyInformationResponse>>> GetDayCurrencyInformationAsync(DateTime? startDate, DateTime? endDate, int page, int size)
     {
-        var response = await _currencyInformationService.GetDayCurrencyInformationAsync(day, page, size);
+        var response = await _currencyInformationService.GetDayCurrencyInformationAsync(startDate, endDate, page, size);
 
         if (!response.Success || response.Data == null)
             return Problem(statusCode: response.StatusCode, title: response.Message ?? "Erro ao buscar informações de moedas");

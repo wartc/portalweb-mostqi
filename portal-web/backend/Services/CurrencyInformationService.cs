@@ -12,9 +12,9 @@ public class CurrencyInformationService
 
     public CurrencyInformationService(CurrencyRepository currencyRepository) => _currencyRepository = currencyRepository;
 
-    public async Task<ServiceResponse<PaginatedResponse<CurrencyInformationResponse>>> GetDayCurrencyInformationAsync(DateTime day, int page, int size)
+    public async Task<ServiceResponse<PaginatedResponse<CurrencyInformationResponse>>> GetDayCurrencyInformationAsync(DateTime? startDate, DateTime? endDate, int page, int size)
     {
-        var currencyInformations = await _currencyRepository.GetDayCurrencyInformationAsync(day, page, size);
+        var currencyInformations = await _currencyRepository.GetDayCurrencyInformationAsync(startDate, endDate, page, size);
 
         if (currencyInformations == null)
         {

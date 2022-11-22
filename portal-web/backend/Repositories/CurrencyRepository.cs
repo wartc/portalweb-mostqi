@@ -16,9 +16,15 @@ public class CurrencyRepository
     public async Task StoreCurrencyExchangeInfo(CurrencyInformation currencyInformation) =>
         await _currencyInformationCollection.InsertOneAsync(currencyInformation);
 
-    public async Task<List<CurrencyInformation>> GetDayCurrencyInformationAsync(DateTime day, int page, int size) =>
-        await _currencyInformationCollection.Find(x => x.Time >= day.Date && x.Time <= day.Date.AddDays(1))
+    public async Task<List<CurrencyInformation>> GetDayCurrencyInformationAsync(DateTime? startDate, DateTime? endDate, int page, int size)
+    {
+        var start = startDate ?? DateTime.Now.Date;
+        var end = endDate ?? DateTime.Now;
+
+        var res = await _currencyInformationCollection.Find(x => x.Time >= start && x.Time <= end)
             .Skip((page - 1) * size)
             .Limit(size + 1)
             .ToListAsync();
+        return res;
+    }
 }
