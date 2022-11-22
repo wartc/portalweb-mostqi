@@ -33,11 +33,23 @@ public class CurrencyBackgroundService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await _currencyRepository.StoreCurrencyExchangeInfo(new()
+            decimal dollarValue;
+
+            try
             {
-                Time = DateTime.UtcNow,
-                DollarExchangeRate = GetCurrentDollarValue()
-            });
+                dollarValue = GetCurrentDollarValue();
+
+                await _currencyRepository.StoreCurrencyExchangeInfo(new()
+                {
+                    Time = DateTime.UtcNow,
+                    DollarExchangeRate = dollarValue
+                });
+            }
+            catch (Exception)
+            {
+                System.Console.WriteLine("Could not get dollar value");
+                continue;
+            }
 
             await Task.Delay(60 * 1000, stoppingToken);
         }

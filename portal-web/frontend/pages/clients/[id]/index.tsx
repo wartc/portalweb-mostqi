@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getUser } from "../../../api/services/users";
 
-import styles from "./ClientProfile.module.scss";
+import styles from "../../../styles/Profile.module.scss";
 import inputStyles from "../../../styles/Input.module.scss";
 import UnexpectedError from "../../../components/UnexpectedError";
 import BoxContainer from "../../../components/BoxContainer";
