@@ -14,7 +14,7 @@ namespace PortalWeb.Services;
 public class AuthService
 {
     private const int REFRESH_TOKEN_EXPIRATION_TIME_HOURS = 48;
-    private const int ACCESS_TOKEN_EXPIRATION_TIME_MINUTES = 1;
+    private const int ACCESS_TOKEN_EXPIRATION_TIME_MINUTES = 15;
     private readonly UserRepository _userRepository;
     private readonly IConfiguration _configuration;
 
