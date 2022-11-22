@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PortalWeb.Contracts.User;
+using PortalWeb.Contracts;
 using PortalWeb.Services;
 
 namespace PortalWeb.Controllers;
@@ -15,7 +16,7 @@ public class ClientsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "CONTRIBUTOR")]
-    public async Task<ActionResult<PaginatedUserResponse>> GetClients(int page, int size)
+    public async Task<ActionResult<PaginatedResponse<UserResponse>>> GetClients(int page, int size)
     {
         var response = await _clientService.GetClientsAsync(page, size);
 
@@ -27,7 +28,7 @@ public class ClientsController : ControllerBase
 
     [HttpGet("search")]
     [Authorize(Roles = "CONTRIBUTOR")]
-    public async Task<ActionResult<PaginatedUserResponse>> SearchClientsByName(string name, bool searchByClient, int page, int size)
+    public async Task<ActionResult<PaginatedResponse<UserResponse>>> SearchClientsByName(string name, bool searchByClient, int page, int size)
     {
         var response = await _clientService.SearchClientsByNameAsync(name, searchByClient, page, size);
 

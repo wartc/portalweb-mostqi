@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Net;
+using PortalWeb.Contracts;
 using PortalWeb.Contracts.User;
 using PortalWeb.Models;
 using PortalWeb.Repositories;
@@ -20,12 +21,12 @@ public class UserService
         _imageRepository = imageRepository;
     }
 
-    public async Task<ServiceResponse<PaginatedUserResponse>> GetUsersAsync(int page, int size)
+    public async Task<ServiceResponse<PaginatedResponse<UserResponse>>> GetUsersAsync(int page, int size)
     {
         var users = await _userRepository.GetAsync(page, size);
 
         if (users == null)
-            return new ServiceResponse<PaginatedUserResponse>(false, message: "Erro ao buscar usuários");
+            return new ServiceResponse<PaginatedResponse<UserResponse>>(false, message: "Erro ao buscar usuários");
 
         bool hasNextPage = false;
 
@@ -37,7 +38,7 @@ public class UserService
 
         var usersResponse = Mapper.MapPaginatedUserResponse(users, hasNextPage);
 
-        return new ServiceResponse<PaginatedUserResponse>(true, usersResponse, (int)HttpStatusCode.OK);
+        return new ServiceResponse<PaginatedResponse<UserResponse>>(true, usersResponse, (int)HttpStatusCode.OK);
     }
 
     public async Task<ServiceResponse<UserResponse>> GetUserAsync(string id, ClaimsPrincipal requestingUser)

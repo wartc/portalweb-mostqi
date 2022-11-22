@@ -1,4 +1,5 @@
 using System.Net;
+using PortalWeb.Contracts;
 using PortalWeb.Contracts.User;
 using PortalWeb.Repositories;
 using PortalWeb.Utils;
@@ -11,13 +12,13 @@ public class ClientService
 
     public ClientService(ClientRepository clientRepository) => _clientRepository = clientRepository;
 
-    public async Task<ServiceResponse<PaginatedUserResponse>> GetClientsAsync(int page, int size)
+    public async Task<ServiceResponse<PaginatedResponse<UserResponse>>> GetClientsAsync(int page, int size)
     {
         var clients = await _clientRepository.GetClientsAsync(page, size);
 
         if (clients == null)
         {
-            return new ServiceResponse<PaginatedUserResponse>(false, message: "Não foi possível obter os clientes");
+            return new ServiceResponse<PaginatedResponse<UserResponse>>(false, message: "Não foi possível obter os clientes");
         }
 
         bool hasNextPage = false;
@@ -30,16 +31,16 @@ public class ClientService
 
         var clientsResponse = Mapper.MapPaginatedUserResponse(clients, hasNextPage);
 
-        return new ServiceResponse<PaginatedUserResponse>(true, clientsResponse, (int)HttpStatusCode.OK);
+        return new ServiceResponse<PaginatedResponse<UserResponse>>(true, clientsResponse, (int)HttpStatusCode.OK);
     }
 
-    public async Task<ServiceResponse<PaginatedUserResponse>> SearchClientsByNameAsync(string name, bool searchByClient, int page, int size)
+    public async Task<ServiceResponse<PaginatedResponse<UserResponse>>> SearchClientsByNameAsync(string name, bool searchByClient, int page, int size)
     {
         var clients = await _clientRepository.SearchClientsByNameAsync(name, searchByClient, page, size);
 
         if (clients == null)
         {
-            return new ServiceResponse<PaginatedUserResponse>(false, message: "Não foi possível obter os clientes");
+            return new ServiceResponse<PaginatedResponse<UserResponse>>(false, message: "Não foi possível obter os clientes");
         }
 
         bool hasNextPage = false;
@@ -52,6 +53,6 @@ public class ClientService
 
         var clientsResponse = Mapper.MapPaginatedUserResponse(clients, hasNextPage);
 
-        return new ServiceResponse<PaginatedUserResponse>(true, clientsResponse, (int)HttpStatusCode.OK);
+        return new ServiceResponse<PaginatedResponse<UserResponse>>(true, clientsResponse, (int)HttpStatusCode.OK);
     }
 }

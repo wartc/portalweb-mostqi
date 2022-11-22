@@ -38,6 +38,7 @@ builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<RegisterService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<CurrencyInformationService>();
 
 // adiciona background service
 builder.Services.AddHostedService<CurrencyBackgroundService>();

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PortalWeb.Contracts.User;
+using PortalWeb.Contracts;
 using PortalWeb.Services;
 
 namespace PortalWeb.Controllers;
@@ -15,7 +16,7 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "CONTRIBUTOR")]
-    public async Task<ActionResult<PaginatedUserResponse>> Get(int page, int size)
+    public async Task<ActionResult<PaginatedResponse<UserResponse>>> Get(int page, int size)
     {
         var response = await _userService.GetUsersAsync(page, size);
 

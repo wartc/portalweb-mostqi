@@ -1,6 +1,8 @@
+using PortalWeb.Contracts;
 using PortalWeb.Contracts.User;
 using PortalWeb.Contracts.Auth;
 using PortalWeb.Contracts.Register;
+using PortalWeb.Contracts.Currency;
 using PortalWeb.Models;
 
 namespace PortalWeb.Utils;
@@ -19,9 +21,21 @@ public static class Mapper
         UpdatedAt = user.UpdatedAt
     };
 
-    public static PaginatedUserResponse MapPaginatedUserResponse(List<User> users, bool hasNextPage) => new()
+    public static CurrencyInformationResponse MapCurrencyInformationResponse(CurrencyInformation currencyInformation) => new()
+    {
+        Time = currencyInformation.Time,
+        DollarExchangeRate = currencyInformation.DollarExchangeRate,
+    };
+
+    public static PaginatedResponse<UserResponse> MapPaginatedUserResponse(List<User> users, bool hasNextPage) => new()
     {
         Data = users.Select(MapUserResponse).ToList(),
+        HasNextPage = hasNextPage
+    };
+
+    public static PaginatedResponse<CurrencyInformationResponse> MapPaginatedCurrencyInformationResponse(List<CurrencyInformation> currencyInformations, bool hasNextPage) => new()
+    {
+        Data = currencyInformations.Select(MapCurrencyInformationResponse).ToList(),
         HasNextPage = hasNextPage
     };
 
