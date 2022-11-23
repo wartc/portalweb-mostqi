@@ -8,15 +8,33 @@ import inputStyles from "../../styles/Input.module.scss";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
+import toast from "react-hot-toast";
+import { changePassword } from "../../api/services/account";
+
+type ProfileForm = {
+  currentPassword: string;
+  newPassword: string;
+};
 
 const Profile = ({ user }: WithAuthorizationProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<ProfileForm>();
 
-  const handleChangePassword = (data: any) => {};
+  const handleChangePassword = ({ currentPassword, newPassword }: ProfileForm) => {
+    toast.promise(changePassword(currentPassword, newPassword), {
+      loading: "Alterando senha...",
+      success: "Senha alterada com sucesso!",
+      error: (err) => {
+        if (err.data?.title) {
+          return err.data.title;
+        }
+        return "Erro ao alterar senha";
+      },
+    });
+  };
 
   return (
     <div className={profileStyles.container}>
@@ -78,8 +96,12 @@ const Profile = ({ user }: WithAuthorizationProps) => {
           <form className={styles.changePasswordForm} onSubmit={handleSubmit(handleChangePassword)}>
             <h2>Alterar senha</h2>
             <div className={`${inputStyles.inputContainer} ${inputStyles.fluid}`}>
-              <label className={inputStyles.inputLabel}>Senha atual</label>
+              <label htmlFor="currentPassword" className={inputStyles.inputLabel}>
+                Senha atual
+              </label>
               <input
+                id="currentPassword"
+                type="password"
                 className={inputStyles.input}
                 {...register("currentPassword", { required: true })}
               />
@@ -89,8 +111,12 @@ const Profile = ({ user }: WithAuthorizationProps) => {
             </div>
 
             <div className={`${inputStyles.inputContainer} ${inputStyles.fluid}`}>
-              <label className={inputStyles.inputLabel}>Nova senha</label>
+              <label htmlFor="newPassword" className={inputStyles.inputLabel}>
+                Nova senha
+              </label>
               <input
+                id="newPassword"
+                type="password"
                 className={inputStyles.input}
                 {...register("newPassword", { required: true })}
               />

@@ -14,7 +14,7 @@ public class AccountController : ControllerBase
     public AccountController(AccountService accountService) => _accountService = accountService;
 
     [HttpPost]
-    [Route("password")]
+    [Route("changePassword")]
     [Authorize]
     public async Task<ActionResult> ChangePassword(ChangePasswordRequest request)
     {
