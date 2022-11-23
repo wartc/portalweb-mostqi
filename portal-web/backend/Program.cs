@@ -15,7 +15,11 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
     policy =>
     {
-        policy.WithOrigins(builder.Configuration["Domains:Api"]!, builder.Configuration["Domains:Application"]!).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+        policy.WithOrigins(builder.Configuration["Domains:Api"]!, builder.Configuration["Domains:Application"]!)
+            .SetIsOriginAllowedToAllowWildcardSubdomains()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
