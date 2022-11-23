@@ -1,6 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 
@@ -30,6 +29,7 @@ public class AuthService
         {
             Expires = DateTime.UtcNow.AddHours(REFRESH_TOKEN_EXPIRATION_TIME_HOURS),
             HttpOnly = true,
+            SameSite = SameSiteMode.None,
             Secure = true,
             Path = "/",
         });
