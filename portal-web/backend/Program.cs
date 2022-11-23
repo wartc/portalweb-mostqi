@@ -10,18 +10,7 @@ using PortalWeb.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-    policy =>
-    {
-        policy.WithOrigins(builder.Configuration["Domains:Api"]!, builder.Configuration["Domains:Application"]!)
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
-});
+builder.Services.AddCors();
 
 // configuracao do mongodb
 builder.Services.Configure<DBSettings>(builder.Configuration.GetSection("DatabaseSettings"));
@@ -76,7 +65,13 @@ var app = builder.Build();
 // middleware para tratamento de erros
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseCors();
+
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true)
+    //.WithOrigins()
+    .AllowCredentials());
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
