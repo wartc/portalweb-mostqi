@@ -9,6 +9,7 @@ import "../styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Modal from "react-modal";
 import { Toaster } from "react-hot-toast";
+import Head from "next/head";
 
 const poppins = Poppins({
   weight: ["400", "700"],
@@ -39,6 +40,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <>
+      <Head>
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <title>MostQI - Portal Web</title>
+      </Head>
       <style jsx global>{`
         html {
           font-family: ${poppins.style.fontFamily};
