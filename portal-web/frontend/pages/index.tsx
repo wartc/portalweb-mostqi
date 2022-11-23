@@ -52,6 +52,7 @@ const Login: NextPageWithLayout = () => {
             className={inputStyles.input}
             type="email"
             id="email"
+            placeholder="seu@email.com"
             {...register("email", { required: true })}
           />
         </div>
