@@ -69,7 +69,7 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
-    .WithOrigins(builder.Configuration["Domains:Application"]!)
+    .SetIsOriginAllowed(origin => origin.StartsWith(builder.Configuration["Domains:Application"]!))
     .AllowCredentials());
 app.UseAuthentication();
 app.UseAuthorization();
