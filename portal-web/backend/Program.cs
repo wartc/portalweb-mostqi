@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
     policy =>
     {
         policy.WithOrigins(builder.Configuration["Domains:Api"]!, builder.Configuration["Domains:Application"]!)
-            .SetIsOriginAllowedToAllowWildcardSubdomains()
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
