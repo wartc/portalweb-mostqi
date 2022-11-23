@@ -36,6 +36,7 @@ builder.Services.AddSingleton<CurrencyRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<RegisterService>();
+builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<CurrencyInformationService>();

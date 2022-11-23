@@ -7,7 +7,7 @@ using PortalWeb.Services;
 namespace PortalWeb.Controllers;
 
 [ApiController]
-[Route("/currency")]
+[Route("currency")]
 public class CurrencyInformationController : ControllerBase
 {
     private readonly CurrencyInformationService _currencyInformationService;

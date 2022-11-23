@@ -1,6 +1,6 @@
 namespace PortalWeb.Contracts.Auth;
 
-public class LoginRequest
+public record LoginRequest
 {
     public string Email { get; set; } = null!;
 
