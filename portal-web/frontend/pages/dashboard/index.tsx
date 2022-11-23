@@ -94,7 +94,13 @@ const Dashboard = () => {
 
       <Table
         columns={[
-          { title: "HORA", render: (cur) => new Date(cur.time).toLocaleString() },
+          {
+            title: "HORA",
+            render: (cur) => {
+              const [yyyy, mm, dd, hh, mi] = new Date(cur.time).toISOString().split(/[/:\-T]/);
+              return `${dd}-${mm}-${yyyy} ${hh}:${mi}`;
+            },
+          },
           { title: "VALOR DO DÓLAR", render: (cur) => numberFormat.format(cur.dollarExchangeRate) },
         ]}
         data={currencyInfoQuery.data?.data!}
