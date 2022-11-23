@@ -50,24 +50,22 @@ const LivenessForm = ({ onStepSubmit }: LivenessFormProps) => {
       },
     });
 
-    toast.promise(
-      faceCompare({
-        faceFileBase64A: formData.document,
-        faceFileBase64B: selfie,
-      }),
-      {
-        loading: "Verificando similaridade do rosto...",
-        success: ({ result }: any) => {
-          if (result.distances[0] > 0.5) return "Rosto não confere com documento.";
+    const statusToast = toast.loading("Verificando similaridade do rosto...");
 
-          onStepSubmit(selfie);
-          return "Rosto confere com documento!";
-        },
-        error: () => {
-          return "Erro ao verificar similaridade do rosto";
-        },
-      }
-    );
+    faceCompare({
+      faceFileBase64A: formData.document,
+      faceFileBase64B: selfie,
+    })
+      .then(({ result }) => {
+        if (result.distances[0] > 0.5)
+          return toast.error("Rosto não confere com documento.", { id: statusToast });
+
+        onStepSubmit(selfie);
+        return toast.success("Rosto confere com documento!", { id: statusToast });
+      })
+      .catch(() => {
+        toast.error("Erro ao verificar similaridade do rosto.", { id: statusToast });
+      });
   };
 
   const fileState = watch("livenessVideo");
